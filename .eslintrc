@@ -1,0 +1,82 @@
+{
+  "env": {
+    "react-native/react-native": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [],
+      "parserOptions": {
+        "project": ["./tsconfig.json"] // Specify it only for TypeScript files
+      }
+    }
+  ],
+  "plugins": ["react", "react-hooks", "react-native", "import", "@typescript-eslint", "prettier"],
+  "rules": {
+    "semi": ["error", "never"],
+    "import/no-default-export": "error",
+    "import/no-cycle": "error",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "type",
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "@/**",
+            "group": "internal"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["type"],
+        "newlines-between": "always"
+      }
+    ],
+    "no-useless-return": "error",
+    "no-else-return": "error",
+    "no-empty-function": "off",
+    "no-console": "error",
+    "no-unreachable": "error",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "prettier/prettier": "error"
+  },
+  "settings": {
+    "import/ignore": ["react-native"],
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": "."
+      }
+    }
+  }
+}
