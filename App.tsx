@@ -1,20 +1,22 @@
-import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+
+import { RootNavigator } from '@/navigation/RootNavigator'
+import { useFonts } from '@/state/app-queries'
 
 export const App = () => {
+  const { isLoading } = useFonts()
+
+  if (isLoading) {
+    return null
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>T code trong 30s do you see it</Text>
-      <StatusBar style="auto" />
-    </View>
+    /**
+     * If you are not familiar with React Navigation, refer to the "Fundamentals" guide:
+     * https://reactnavigation.org/docs/getting-started
+     */
+    <NavigationContainer>
+      <RootNavigator />
+    </NavigationContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FF0000',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
