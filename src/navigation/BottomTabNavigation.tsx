@@ -1,8 +1,17 @@
 import type { RootTabParamList } from '@/types/root'
 import type { BottomTabNavigationOptions, BottomTabBarProps } from '@react-navigation/bottom-tabs'
 
-import { Pressable, View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import {
+  Text,
+  SafeAreaView as SafeAreaViewIOS,
+  StatusBar,
+  Platform,
+  View,
+  Pressable,
+} from 'react-native'
+import { Avatar } from 'react-native-elements'
+import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-context'
 
 import { tw } from '@/lib/tailwind'
 import { CheckinScreen } from '@/screens/CheckinScreen'
@@ -11,6 +20,10 @@ import { LeaveScreen } from '@/screens/LeaveScreen'
 import { SalaryScreen } from '@/screens/SalaryScreen'
 import { InformationScreen } from '@/screens/InformationScreen'
 import { NotiScreen } from '@/screens/NotiScreen'
+import { LeaveIcon } from '@/assets/icons/LeaveIcon'
+import { CalendarIcon } from '@/assets/icons/CalendarIcon'
+import { InformationIcon } from '@/assets/icons/InformationIcon'
+import { SalaryIcon } from '@/assets/icons/SalaryIcon'
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 export const BottomTabNavigator = () => {
@@ -18,7 +31,7 @@ export const BottomTabNavigator = () => {
     <BottomTab.Navigator
       initialRouteName="Checkin"
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         lazy: true,
       }}
       tabBar={TabBar}
@@ -26,33 +39,34 @@ export const BottomTabNavigator = () => {
       {[
         {
           name: 'Leave' as const,
-          label: 'LeaveTab',
+          label: 'Leave',
           Component: LeaveScreen,
-          Icon: CheckinIcon,
+          Icon: LeaveIcon,
         },
         {
           name: 'Salary' as const,
-          label: 'SalaryTab',
+          label: 'Salary',
           Component: SalaryScreen,
-          Icon: CheckinIcon,
+          Icon: SalaryIcon,
         },
         {
           name: 'Checkin' as const,
-          label: 'Checkin',
+          label: 'Check in',
           Component: CheckinScreen,
           Icon: CheckinIcon,
         },
-        {
-          name: 'Information' as const,
-          label: 'InformationTab',
-          Component: InformationScreen,
-          Icon: CheckinIcon,
-        },
+
         {
           name: 'Notification' as const,
-          label: 'NotificationTab',
+          label: 'Notification',
           Component: NotiScreen,
-          Icon: CheckinIcon,
+          Icon: CalendarIcon,
+        },
+        {
+          name: 'Information' as const,
+          label: 'Information',
+          Component: InformationScreen,
+          Icon: InformationIcon,
         },
       ].map(({ label, name, Component, Icon }) => {
         return (
@@ -64,12 +78,12 @@ export const BottomTabNavigator = () => {
               tabBarLabel: label,
               tabBarIcon: ({ focused }) => (
                 <View
-                  style={tw(' flex items-center justify-center', {
-                    'bg-primary rounded-full w-18 h-18': name === 'Checkin',
+                  style={tw('flex items-center justify-center', {
+                    'bg-primary rounded-full w-16 h-16 shadow-lg': name === 'Checkin',
                   })}
                 >
                   <Icon
-                    style={tw('h-8 w-8 self-center -mt-1', {
+                    style={tw('self-center w-8 h-8', {
                       'text-primary': focused && name !== 'Checkin',
                       'text-black': !focused,
                       'text-white': focused && name === 'Checkin',
@@ -77,6 +91,31 @@ export const BottomTabNavigator = () => {
                   />
                 </View>
               ),
+              headerShown: true,
+              header: () => {
+                const SafeAreaView = Platform.OS === 'ios' ? SafeAreaViewIOS : SafeAreaViewAndroid
+                return (
+                  <SafeAreaView style={tw('bg-white h-20 shadow-lg flex flex-col items-center')}>
+                    <StatusBar barStyle="dark-content" />
+                    <View style={tw('flex-grow flex flex-row items-center w-full justify-between')}>
+                      <View style={tw('flex flex-row items-center pl-2')}>
+                        <Avatar
+                          size={32}
+                          rounded
+                          source={{
+                            uri: 'https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg',
+                          }}
+                          title={'N'}
+                        />
+                        <Text style={tw('font-nunito-semibold text-lg pl-2')}>Hello, Nguyen</Text>
+                      </View>
+                      <Text style={tw('font-nunito-semibold text-lg text-primary pr-2')}>
+                        {label.toUpperCase()}
+                      </Text>
+                    </View>
+                  </SafeAreaView>
+                )
+              },
             }}
           />
         )
@@ -88,7 +127,7 @@ export const BottomTabNavigator = () => {
 const TabBar = ({ state, descriptors, navigation, insets }: BottomTabBarProps) => {
   return (
     <View
-      style={tw('flex flex-row rounded-xl bg-white shadow-md', {
+      style={tw('flex flex-row shadow-lg bg-white', {
         height: 60 + insets.bottom,
       })}
     >
@@ -139,8 +178,8 @@ const Tab = ({ route, options, navigation, isFocused }: TabProps) => {
       key={route.key}
       accessibilityRole="button"
       onPress={onPress}
-      style={tw('w-1/5 flex justify-center', {
-        '-mt-10': route.name === 'Checkin',
+      style={tw('w-1/5 flex justify-center items-center', {
+        '-mt-12': route.name === 'Checkin',
       })}
     >
       {options.tabBarIcon &&
