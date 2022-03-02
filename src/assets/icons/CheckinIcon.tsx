@@ -4,8 +4,8 @@ import Svg, { Path } from 'react-native-svg'
 
 export const CheckinIcon = (props: SvgProps) => {
   return (
-    <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <Path d="M20.833 6.25h-4.166V4.167a2.076 2.076 0 00-2.084-2.084h-4.166a2.076 2.076 0 00-2.084 2.084V6.25H4.167a2.067 2.067 0 00-2.073 2.083l-.01 11.459c0 1.156.926 2.083 2.083 2.083h16.666a2.076 2.076 0 002.084-2.083V8.333a2.076 2.076 0 00-2.084-2.083zm-6.25 0h-4.166V4.167h4.166V6.25z" />
+    <Svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <Path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5a2 2 0 00-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 002 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
     </Svg>
   )
 }

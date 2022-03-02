@@ -8,8 +8,7 @@ import { LeaveScreen } from '@/screens/LeaveScreen'
 import { InformationScreen } from '@/screens/InformationScreen'
 import { NotiScreen } from '@/screens/NotiScreen'
 
-import { DrawerNavigator } from './DrawerNavigator'
-
+import { BottomTabNavigator } from './BottomTabNavigation'
 const Stack = createStackNavigator<RootStackParamList>()
 
 export const RootNavigator = () => {
@@ -24,7 +23,7 @@ export const RootNavigator = () => {
       ></Stack.Screen>
       <Stack.Screen
         name="Root"
-        component={DrawerNavigator}
+        component={BottomTabNavigator}
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
