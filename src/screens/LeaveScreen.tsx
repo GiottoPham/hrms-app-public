@@ -1,13 +1,19 @@
-import { ScrollView, View, Text, Button } from 'react-native'
+import { View, Text } from 'react-native'
 import React, { useState } from 'react'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { format } from 'date-fns'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
-// import Icon from 'react-native-vector-icons/FontAwesome5'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 
 import { tw } from '@/lib/tailwind'
+
+import { LeaveAccept } from './SubScreen/LeaveAgree'
+import { LeaveIgnore } from './SubScreen/LeaveIgnore'
+import { LeavePending } from './SubScreen/LeavePending'
+// import Icon from 'react-native-vector-icons/FontAwesome5'
+
+const Tab = createMaterialTopTabNavigator()
 export const LeaveScreen = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
   const [dateAvailable, setDateAvailable] = useState(new Date())
@@ -44,6 +50,19 @@ export const LeaveScreen = () => {
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
+      <Tab.Navigator
+        initialRouteName="Pending"
+        screenOptions={{
+          tabBarActiveTintColor: '#e91e63',
+          tabBarLabelStyle: { fontSize: 12 },
+          tabBarStyle: { backgroundColor: 'powderblue' },
+        }}
+      >
+        <Tab.Screen name="Pending" component={LeavePending} options={{ tabBarLabel: 'Pending' }} />
+        <Tab.Screen name="Accept" component={LeaveAccept} options={{ tabBarLabel: 'Accepted' }} />
+        <Tab.Screen name="Ignore" component={LeaveIgnore} options={{ tabBarLabel: 'Ignored' }} />
+      </Tab.Navigator>
+      );
     </View>
   )
 }
