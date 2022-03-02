@@ -9,6 +9,7 @@
       "image": "./assets/Picture2.png",
       "resizeMode":"cover"
     },
+    "userInterfaceStyle": "automatic",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
