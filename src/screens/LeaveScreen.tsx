@@ -30,19 +30,22 @@ export const LeaveScreen = () => {
     setDateAvailable(date)
   }
   return (
-    <View style={tw('flex flex-1 bg-white items-center py-3')}>
-      <TouchableOpacity
-        onPress={showDatePicker}
-        style={tw(
-          'items-center bg-gray-200 px-3 h-13 w-45 relative flex flex-row justify-center rounded-lg'
-        )}
-      >
-        <Icon name="calendar" size={30} color="#FFBE55" />
-        <View style={tw('flex-grow flex items-center')}>
-          <Text>{format(dateAvailable, 'MM-dd-yyyy')}</Text>
-        </View>
-        {/* <Icon reverse name="ios-american-football" type="ionicon" color="#517fa4" /> */}
-      </TouchableOpacity>
+    <View style={tw('flex flex-1 bg-white')}>
+      <View style={tw('h-20 flex items-center justify-center')}>
+        <TouchableOpacity
+          onPress={showDatePicker}
+          style={tw(
+            'items-center bg-gray-200 px-3 h-13 w-45 relative flex flex-row justify-center rounded-lg'
+          )}
+        >
+          <Icon name="calendar" size={30} color="#FFBE55" />
+          <View style={tw('flex-grow flex items-center')}>
+            <Text>{format(dateAvailable, 'MM-dd-yyyy')}</Text>
+          </View>
+          {/* <Icon reverse name="ios-american-football" type="ionicon" color="#517fa4" /> */}
+        </TouchableOpacity>
+      </View>
+
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         date={dateAvailable}
@@ -62,7 +65,6 @@ export const LeaveScreen = () => {
         <Tab.Screen name="Accept" component={LeaveAccept} options={{ tabBarLabel: 'Accepted' }} />
         <Tab.Screen name="Ignore" component={LeaveIgnore} options={{ tabBarLabel: 'Ignored' }} />
       </Tab.Navigator>
-      );
     </View>
   )
 }

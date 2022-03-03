@@ -9,6 +9,7 @@ export type RootStackParamList = {
   Salary: undefined
   Information: undefined
   Notification: undefined
+  LeavePending: undefined
 }
 export type DrawerParamList = {
   BottomTabs: NavigatorScreenParams<RootTabParamList> | undefined
