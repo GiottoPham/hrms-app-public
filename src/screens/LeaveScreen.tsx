@@ -5,6 +5,7 @@ import { format } from 'date-fns'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import { NavigationContainer } from '@react-navigation/native'
 
 import { tw } from '@/lib/tailwind'
 
@@ -50,18 +51,24 @@ export const LeaveScreen = () => {
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
-      <Tab.Navigator
-        initialRouteName="Pending"
-        screenOptions={{
-          tabBarActiveTintColor: '#e91e63',
-          tabBarLabelStyle: { fontSize: 12 },
-          tabBarStyle: { backgroundColor: 'powderblue' },
-        }}
-      >
-        <Tab.Screen name="Pending" component={LeavePending} options={{ tabBarLabel: 'Pending' }} />
-        <Tab.Screen name="Accept" component={LeaveAccept} options={{ tabBarLabel: 'Accepted' }} />
-        <Tab.Screen name="Ignore" component={LeaveIgnore} options={{ tabBarLabel: 'Ignored' }} />
-      </Tab.Navigator>
+      <NavigationContainer>
+        <Tab.Navigator
+          initialRouteName="Pending"
+          screenOptions={{
+            tabBarActiveTintColor: '#e91e63',
+            tabBarLabelStyle: { fontSize: 12 },
+            tabBarStyle: { backgroundColor: 'powderblue' },
+          }}
+        >
+          <Tab.Screen
+            name="Pending"
+            component={LeavePending}
+            options={{ tabBarLabel: 'Pending' }}
+          />
+          <Tab.Screen name="Accept" component={LeaveAccept} options={{ tabBarLabel: 'Accepted' }} />
+          <Tab.Screen name="Ignore" component={LeaveIgnore} options={{ tabBarLabel: 'Ignored' }} />
+        </Tab.Navigator>
+      </NavigationContainer>
       );
     </View>
   )
