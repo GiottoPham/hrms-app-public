@@ -24,12 +24,13 @@ import { LeaveIcon } from '@/assets/icons/LeaveIcon'
 import { CalendarIcon } from '@/assets/icons/CalendarIcon'
 import { InformationIcon } from '@/assets/icons/InformationIcon'
 import { SalaryIcon } from '@/assets/icons/SalaryIcon'
+import { CreateFormLeave } from '@/screens/CreateFormLeave'
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 export const BottomTabNavigator = () => {
   return (
     <BottomTab.Navigator
-      initialRouteName="Checkin"
+      initialRouteName="CheckinBottom"
       screenOptions={{
         headerShown: false,
         lazy: true,
@@ -38,7 +39,7 @@ export const BottomTabNavigator = () => {
     >
       {[
         {
-          name: 'Leave' as const,
+          name: 'LeaveBottom' as const,
           label: 'Leave',
           Component: LeaveScreen,
           Icon: LeaveIcon,
@@ -50,12 +51,11 @@ export const BottomTabNavigator = () => {
           Icon: SalaryIcon,
         },
         {
-          name: 'Checkin' as const,
+          name: 'CheckinBottom' as const,
           label: 'Check in',
           Component: CheckinScreen,
           Icon: CheckinIcon,
         },
-
         {
           name: 'Notification' as const,
           label: 'Notification',
@@ -66,6 +66,12 @@ export const BottomTabNavigator = () => {
           name: 'Information' as const,
           label: 'Information',
           Component: InformationScreen,
+          Icon: InformationIcon,
+        },
+        {
+          name: 'CreateLeave' as const,
+          label: 'Create Form Leave',
+          Component: CreateFormLeave,
           Icon: InformationIcon,
         },
       ].map(({ label, name, Component, Icon }) => {
@@ -79,14 +85,14 @@ export const BottomTabNavigator = () => {
               tabBarIcon: ({ focused }) => (
                 <View
                   style={tw('flex items-center justify-center', {
-                    'bg-primary rounded-full w-16 h-16 shadow-lg': name === 'Checkin',
+                    'bg-primary rounded-full w-16 h-16 shadow-lg': name === 'CheckinBottom',
                   })}
                 >
                   <Icon
                     style={tw('self-center w-8 h-8', {
-                      'text-primary': focused && name !== 'Checkin',
+                      'text-primary': focused && name !== 'CheckinBottom',
                       'text-black': !focused,
-                      'text-white': focused && name === 'Checkin',
+                      'text-white': focused && name === 'CheckinBottom',
                     })}
                   />
                 </View>
