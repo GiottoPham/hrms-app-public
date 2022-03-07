@@ -3,23 +3,26 @@ import type { StackScreenProps } from '@react-navigation/stack'
 
 export type RootStackParamList = {
   Login: undefined
-  Root: NavigatorScreenParams<DrawerParamList> | undefined
+  BottomTabs: NavigatorScreenParams<RootTabParamList> | undefined
   Checkin: undefined
   Leave: undefined
   Salary: undefined
   Information: undefined
   Notification: undefined
+  LeavePending: undefined
+  CreateLeave: undefined
 }
 export type DrawerParamList = {
-  BottomTabs: NavigatorScreenParams<RootTabParamList> | undefined
+  
 }
 
 export type RootTabParamList = {
-  Checkin: undefined
-  Leave: undefined
+  CheckinBottom: undefined
+  LeaveBottom: undefined
   Salary: undefined
   Information: undefined
   Notification: undefined
+  CreateLeave: undefined
 }
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = StackScreenProps<
   RootStackParamList,

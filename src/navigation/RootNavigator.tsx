@@ -7,6 +7,7 @@ import { CheckinScreen } from '@/screens/CheckinScreen'
 import { LeaveScreen } from '@/screens/LeaveScreen'
 import { InformationScreen } from '@/screens/InformationScreen'
 import { NotiScreen } from '@/screens/NotiScreen'
+import { CreateFormLeave } from '@/screens/CreateFormLeave'
 
 import { BottomTabNavigator } from './BottomTabNavigation'
 const Stack = createStackNavigator<RootStackParamList>()
@@ -22,7 +23,7 @@ export const RootNavigator = () => {
         }}
       ></Stack.Screen>
       <Stack.Screen
-        name="Root"
+        name="BottomTabs"
         component={BottomTabNavigator}
         options={{
           headerShown: false,
@@ -64,6 +65,14 @@ export const RootNavigator = () => {
       <Stack.Screen
         name="Notification"
         component={NotiScreen}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        }}
+      />
+      <Stack.Screen
+        name="CreateLeave"
+        component={CreateFormLeave}
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,

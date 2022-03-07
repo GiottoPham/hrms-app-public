@@ -70,7 +70,7 @@ export const AuthScreen = () => {
             style={tw(
               'flex flex-row items-center justify-center bg-white rounded-lg w-20 h-10 mt-5 bg-primary'
             )}
-            onPress={() => navigation.push('Root')}
+            onPress={() => navigation.push('BottomTabs')}
           >
             <Text style={tw('font-nunito-semibold text-base text-white')}>Login</Text>
           </TouchableOpacity>
