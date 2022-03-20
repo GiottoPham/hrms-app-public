@@ -10,6 +10,7 @@ import { NotiScreen } from '@/screens/NotiScreen'
 import { CreateFormLeave } from '@/screens/CreateFormLeave'
 
 import { BottomTabNavigator } from './BottomTabNavigation'
+import { CheckinMethod } from '@/components/CheckinScreen/CheckinMethod'
 const Stack = createStackNavigator<RootStackParamList>()
 
 export const RootNavigator = () => {
@@ -73,6 +74,14 @@ export const RootNavigator = () => {
       <Stack.Screen
         name="CreateLeave"
         component={CreateFormLeave}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        }}
+      />
+      <Stack.Screen
+        name="CheckinMethod"
+        component={CheckinMethod}
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,

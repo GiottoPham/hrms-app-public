@@ -11,18 +11,19 @@ export type RootStackParamList = {
   Notification: undefined
   LeavePending: undefined
   CreateLeave: undefined
-}
-export type DrawerParamList = {
-  
+  CheckinMethod: undefined
 }
 
 export type RootTabParamList = {
-  CheckinBottom: undefined
+  CheckinBottom: {
+    isChecking: boolean
+  }
   LeaveBottom: undefined
   Salary: undefined
   Information: undefined
   Notification: undefined
   CreateLeave: undefined
+  CheckinMethod: undefined
 }
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = StackScreenProps<
   RootStackParamList,

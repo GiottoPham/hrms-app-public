@@ -17,7 +17,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist":{
+        "NSCameraUsageDescription":"This app needs camera to scan QR Code surving checkin purpose!",
+        "NSPhotoLibraryUsageDescription": "Your message to user when the photo library is accessed for the first time",
+        "NSMicrophoneUsageDescription": "Your message to user when the microsphone is accessed for the first time",
+        "NSLocationWhenInUseUsageDescription":  "This app needs your location surving checkin purpose!",
+        "NSLocationAlwaysUsageDescription":  "This app needs your location surving checkin purpose!"
+
+      }
     },
     "android": {
       "adaptiveIcon": {

@@ -6,3 +6,6 @@ declare module 'react-native-svg' {
     xmlnsXlink?: string
   }
 }
+declare module '*.png' {
+  export const src: string
+}

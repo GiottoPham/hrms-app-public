@@ -25,6 +25,7 @@ import { CalendarIcon } from '@/assets/icons/CalendarIcon'
 import { InformationIcon } from '@/assets/icons/InformationIcon'
 import { SalaryIcon } from '@/assets/icons/SalaryIcon'
 import { CreateFormLeave } from '@/screens/CreateFormLeave'
+import { CheckinMethod } from '@/components/CheckinScreen/CheckinMethod'
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 export const BottomTabNavigator = () => {
@@ -74,6 +75,12 @@ export const BottomTabNavigator = () => {
           Component: CreateFormLeave,
           Icon: InformationIcon,
         },
+        {
+          name: 'CheckinMethod' as const,
+          label: 'Select Checkin Method',
+          Component: CheckinMethod,
+          Icon: InformationIcon,
+        },
       ].map(({ label, name, Component, Icon }) => {
         return (
           <BottomTab.Screen
@@ -85,7 +92,7 @@ export const BottomTabNavigator = () => {
               tabBarIcon: ({ focused }) => (
                 <View
                   style={tw('flex items-center justify-center', {
-                    'bg-primary rounded-full w-16 h-16 shadow-lg': name === 'CheckinBottom',
+                    'bg-primary mb-13 rounded-full w-16 h-16 shadow-lg': name === 'CheckinBottom',
                   })}
                 >
                   <Icon
