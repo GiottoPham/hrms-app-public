@@ -16,23 +16,27 @@ import { useEffect, useState } from 'react'
 
 import { tw } from '@/lib/tailwind'
 import { LogoIcon } from '@/assets/icons/LogoIcon'
+import { useLogin } from '@/state/auth-mutation'
+import { useCurrentUser } from '@/state/auth-queries'
 export const AuthScreen = () => {
+  const { login } = useLogin()
+  const { currentUser, isLoadingUser } = useCurrentUser()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
   const [username, setUsername] = useState('')
   const handleChangeUsername = (newText: string) => setUsername(newText)
   const [password, setPassword] = useState('')
   const handleChangePassword = (newText: string) => setPassword(newText)
   const [keyboardHeight, setKeyboardHeight] = useState(0)
-
   function onKeyboardDidShow(e: KeyboardEvent) {
     // Remove type here if not using TypeScript
     setKeyboardHeight(e.endCoordinates.height)
   }
-
   function onKeyboardDidHide() {
     setKeyboardHeight(0)
   }
-
+  const handleLogin = () => {
+    login({ username: username, password: password }).then(() => navigation.replace('BottomTabs'))
+  }
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', onKeyboardDidShow)
     const hideSubscription = Keyboard.addListener('keyboardDidHide', onKeyboardDidHide)
@@ -41,6 +45,9 @@ export const AuthScreen = () => {
       hideSubscription.remove()
     }
   }, [])
+  useEffect(() => {
+    if (!isLoadingUser && currentUser) navigation.replace('BottomTabs')
+  }, [isLoadingUser, navigation, currentUser])
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={tw('flex flex-1 bg-white font-nunito text-white')}>
@@ -70,7 +77,7 @@ export const AuthScreen = () => {
             style={tw(
               'flex flex-row items-center justify-center bg-white rounded-lg w-20 h-10 mt-5 bg-primary'
             )}
-            onPress={() => navigation.push('BottomTabs')}
+            onPress={handleLogin}
           >
             <Text style={tw('font-nunito-semibold text-base text-white')}>Login</Text>
           </TouchableOpacity>

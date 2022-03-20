@@ -9,7 +9,9 @@ import { tw } from '@/lib/tailwind'
 import { BasicInfo } from '@/components/InformationScreen/basicInfo'
 import { Insurance } from '@/components/InformationScreen/insurance'
 import { JobSalary } from '@/components/InformationScreen/jobSalary'
+import { useEmployee } from '@/state/employee-queries'
 export const InformationScreen = () => {
+  const { employee, isLoading } = useEmployee(1)
   const [basic, setBasic] = useState(false)
   const [job, setJob] = useState(false)
   const [insurance, setInsurance] = useState(false)
@@ -31,6 +33,9 @@ export const InformationScreen = () => {
   useEffect(() => {
     setBasic(true)
   }, [])
+  if (isLoading) return null
+  // eslint-disable-next-line no-console
+  console.log(employee)
   return (
     <View style={tw('flex flex-1 bg-gray-200')}>
       <ImageBackground
