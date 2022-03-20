@@ -1,2 +1,5 @@
 export const FONTS = 'fonts'
 export const LAST_VISITED_EXPLORE_MAP_ROUTE_KEY = 'last-visited-explore-map-route-key'
+export const AUTH = 'auth'
+export const CURRENT_USER = 'current-user'
+export const EMPLOYEE = 'employee'
