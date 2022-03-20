@@ -26,9 +26,11 @@ import { InformationIcon } from '@/assets/icons/InformationIcon'
 import { SalaryIcon } from '@/assets/icons/SalaryIcon'
 import { CreateFormLeave } from '@/screens/CreateFormLeave'
 import { CheckinMethod } from '@/components/CheckinScreen/CheckinMethod'
+import { useCurrentUser } from '@/state/auth-queries'
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 export const BottomTabNavigator = () => {
+  const { currentUser } = useCurrentUser()
   return (
     <BottomTab.Navigator
       initialRouteName="CheckinBottom"
@@ -120,7 +122,9 @@ export const BottomTabNavigator = () => {
                           }}
                           title={'N'}
                         />
-                        <Text style={tw('font-nunito-semibold text-lg pl-2')}>Hello, Nguyen</Text>
+                        <Text style={tw('font-nunito-semibold text-lg pl-2')}>
+                          Hello, {currentUser?.username}
+                        </Text>
                       </View>
                       <Text style={tw('font-nunito-semibold text-lg text-primary pr-2')}>
                         {label.toUpperCase()}
