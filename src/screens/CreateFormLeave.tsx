@@ -187,7 +187,7 @@ export const CreateFormLeave = () => {
         )}
         <Text style={tw('font-nunito mb-2 mt-2')}> Reason * </Text>
         <TextInput
-          style={tw('px-2 text-lg h-30 w-90 bg-white rounded-lg text-black-300 items-start')}
+          style={tw('px-2 text-lg h-30 w-90 bg-white rounded-lg text-black items-start')}
           onChangeText={(newText) => setText(newText)}
           defaultValue={text}
           multiline={true}
