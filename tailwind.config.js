@@ -50,6 +50,7 @@ module.exports = {
         'yellow-100': '#FFF7E7',
         'white': '#FFFFFF',
         'black': '#161616',
+        'black-900': '#000000',
         'transparent': 'transparent',
         'current': 'currentColor',
       },
