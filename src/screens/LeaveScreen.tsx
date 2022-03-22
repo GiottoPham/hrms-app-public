@@ -12,10 +12,14 @@ import { LeaveAccept } from '../components/LeaveScreen/LeaveAgree'
 import { LeaveIgnore } from '../components/LeaveScreen/LeaveIgnore'
 import { LeavePending } from '../components/LeaveScreen/LeavePending'
 import { AddButton } from '../components/LeaveScreen/AddButton'
+import { useLeaves } from '@/state/leave-queries'
+import { useCurrentUser } from '@/state/auth-queries'
 // import Icon from 'react-native-vector-icons/FontAwesome5'
 
 const Tab = createMaterialTopTabNavigator()
 export const LeaveScreen = () => {
+  const {currentUser} = useCurrentUser()
+  const {leaves} = useLeaves(currentUser?.id as number)
   const [add, setAdd] = useState(false)
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
   const [dateAvailable, setDateAvailable] = useState(new Date())

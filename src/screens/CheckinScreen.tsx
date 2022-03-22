@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import { tw } from '@/lib/tailwind'
 
-export const CheckinScreen = () => {
+export const CheckinScreen = (prop) => {
   const { width, height } = Dimensions.get('window')
   const R = 800 / (2 * Math.PI)
   const AnimatedCircle = Animated.createAnimatedComponent(Circle)
