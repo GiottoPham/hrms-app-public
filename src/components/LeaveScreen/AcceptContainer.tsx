@@ -1,8 +1,14 @@
+import type { LeaveParse } from '@/types/leave'
+
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 
 import { tw } from '@/lib/tailwind'
-export const AgreeComponent = () => {
+import { format } from 'date-fns'
+export const AgreeComponent = ({ leave }: { leave: LeaveParse }) => {
+  const applyDate = format(new Date(leave.applicationDate), 'dd-MM-yyyy')
+  const applyMonth = format(new Date(leave.applicationDate), 'h:mm a')
+  const apply =  format(new Date(leave.applicationDate), 'dd-MM-yyyy h:mm a')
   return (
     <TouchableOpacity
       style={tw(
@@ -11,14 +17,16 @@ export const AgreeComponent = () => {
     >
       {/* <Icon name="calendar" size={30} color="#FFBE55" /> */}
 
-      <View style={tw('flex flex-col items-start w-1/2')}>
-        <Text style={tw('font-nunito text-lg')}>Nghỉ không lương</Text>
-        <Text style={tw('font-nunito mt-2')}>Số ngày: 1/2</Text>
-        <Text style={tw('font-nunito mt-1')}>Thời gian: 28/2/2022</Text>
+      <View style={tw('flex flex-col items-start w-55')}>
+        <Text style={tw('font-nunito text-lg')}>{leave.leaveType}</Text>
+        <Text style={tw('font-nunito mt-2')}>Số ngày: {leave.amount}</Text>
+        <Text style={tw('font-nunito mt-1')}>
+          Thời gian: {leave.fromDate} - {leave.toDate}
+        </Text>
       </View>
 
-      <View style={tw('flex flex-col w-1/2 items-end')}>
-        <Text>Yesterday: 3: 42 CH</Text>
+      <View style={tw('flex flex-col w-35 items-end')}>
+        <Text>{apply}</Text>
         <View style={tw('flex flex-row mt-12')}>
           <View
             style={tw('bg-green-400 w-1/2 p-2 h-10 flex justify-center items-center rounded-lg')}

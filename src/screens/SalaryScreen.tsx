@@ -1,13 +1,11 @@
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { format } from 'date-fns'
 import DatePicker from 'react-native-modern-datepicker'
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component'
+import Popover from 'react-native-popover-view'
 
 import { tw } from '@/lib/tailwind'
-import Popover from 'react-native-popover-view'
 export const SalaryScreen = () => {
   const [date, setDate] = useState(format(new Date(), 'MM-yyyy'))
   const [show, setShow] = useState(false)
@@ -335,9 +333,7 @@ export const SalaryScreen = () => {
                 </View>
               </View>
               <View
-                style={tw(
-                  'items-center justify-between flex-row border-yellow-600 h-15 w-90 mt-2'
-                )}
+                style={tw('items-center justify-between flex-row border-yellow-600 h-15 w-90 mt-2')}
               >
                 <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>Taxable Income</Text>
                 <View style={tw('flex-row justify-between w-60')}>

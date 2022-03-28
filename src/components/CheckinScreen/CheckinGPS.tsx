@@ -1,6 +1,8 @@
 import type { styles } from 'react-native-circular-progress-indicator/src/circularProgressWithChild/types'
 import type { RootStackParamList } from '@/types/root'
 import type { StackNavigationProp } from '@react-navigation/stack'
+import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
+import type { CheckinTabProps } from '@/types/check-in'
 
 import { getDistance } from 'geolib'
 import { View, Text, Dimensions, Image, ActivityIndicator } from 'react-native'
@@ -11,12 +13,23 @@ import * as Location from 'expo-location'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import IconFoundation from 'react-native-vector-icons/Foundation'
 import { useNavigation } from '@react-navigation/native'
+import { format } from 'date-fns'
+import DeviceInfo from 'react-native-device-info'
 
 import { tw } from '@/lib/tailwind'
 import CompanyIcon from '@/assets/images/company_pin.png'
+import { useCheckin_inRequest } from '@/state/checkin-mutation'
+import { useCurrentUser } from '@/state/auth-queries'
 
 export const CheckinGPS = () => {
   // const geolocation = new Geolocation()
+  const { currentUser } = useCurrentUser()
+  const check_inInput = {
+    userId: currentUser?.id,
+    deviceId: DeviceInfo.getDeviceId(),
+    date: new Date().toISOString(),
+    timeIn: format(new Date(), 'HH:mm:ss'),
+  }
   const [refresh, setRefresh] = useState(false)
   const onPress = () => setRefresh(!refresh)
   const company_latitude = 10.78697
@@ -29,12 +42,12 @@ export const CheckinGPS = () => {
   const [isLoading, setIsLoading] = useState(true)
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
 
-  const [initialPositon, setInitialPosition] = useState({
-    latitude: 10.78697,
-    longitude: 106.67218,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-  })
+  // const [initialPositon, setInitialPosition] = useState({
+  //   latitude: 10.78697,
+  //   longitude: 106.67218,
+  //   latitudeDelta: LATITUDE_DELTA,
+  //   longitudeDelta: LONGITUDE_DELTA,
+  // })
   const [location1, setLocation1] = useState({
     location: { latitude: 0, longitude: 0 },
     geocode: null,
@@ -49,9 +62,7 @@ export const CheckinGPS = () => {
 
   const getLocationAsync = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync()
-    if (status !== 'granted') {
-      console.log('Permission to access location was denied')
-    } else {
+    if (status === 'granted') {
       const location = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.BestForNavigation,
       })
@@ -65,7 +76,6 @@ export const CheckinGPS = () => {
           { latitude: company_latitude, longitude: company_longtitude }
         )
       )
-      console.log(distance)
     }
 
     // getGeocodeAsync({ latitude, longitude })
@@ -77,12 +87,19 @@ export const CheckinGPS = () => {
   }, [])
   useEffect(() => {
     getLocationAsync()
-    console.log(refresh)
   }, [refresh])
   getDistance(
     { latitude: 20.0504188, longitude: 64.4139099 },
     { latitude: 51.528308, longitude: -0.3817765 }
   )
+  const { sendCheckin_inRequest } = useCheckin_inRequest()
+  const handleOnConfirm = () => {
+    sendCheckin_inRequest(check_inInput)
+    navigation.navigate('BottomTabs', {
+      screen: 'CheckinBottom',
+      params: { isChecking: true },
+    })
+  }
   // getGeocodeAsync = async (location) => {
   //   const geocode = await Location.reverseGeocodeAsync(location)
   //   this.setState({ geocode })
@@ -158,12 +175,7 @@ export const CheckinGPS = () => {
           style={tw(
             'h-10 w-30 ml-37 mt-5 bg-blue-700 flex-row items-center justify-center rounded-lg'
           )}
-          onPress={() =>
-            navigation.navigate('BottomTabs', {
-              screen: 'CheckinBottom',
-              params: { isChecking: true },
-            })
-          }
+          onPress={handleOnConfirm}
         >
           <Text style={tw('text-white text-lg font-nunito-bold')}>CONFIRM</Text>
         </TouchableOpacity>

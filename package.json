@@ -1,5 +1,5 @@
 {
-  "name": "new-mobile-app",
+  "name": "hrms-mobile-app",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
@@ -66,6 +66,7 @@
     "react-native-circular-progress-indicator": "^2.0.6",
     "react-native-date-picker": "^4.2.0",
     "react-native-datepicker": "^1.7.2",
+    "react-native-device-info": "^8.5.1",
     "react-native-elements": "^3.4.2",
     "react-native-fast-image": "^8.5.11",
     "react-native-fieldset": "^1.0.3",

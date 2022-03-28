@@ -1,10 +1,23 @@
 export type Leaves = Leave[]
-export type Leave = LeaveInputParams & { id: number }
+export type Leave = LeaveInputParams & { id: number; status: number; applicationDate: string }
 export type LeaveInputParams = {
   amount: number
   fromDate: string
   toDate: string
-  leaveType: number
+  leaveType?: LeaveTypeNum
   reason: string
   userId: number
 }
+export type LeaveParse = {
+  amount: number
+  fromDate: string
+  toDate: string
+  leaveType: string
+  reason: string
+  applicationDate: string
+}
+export enum LeaveType {
+  Unpaid = 'Unpaid Leave',
+  Paid = 'Paid Leave',
+}
+export type LeaveTypeNum = 0 | 1

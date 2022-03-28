@@ -1,7 +1,7 @@
 import { ScrollView, View, Text, ImageBackground } from 'react-native'
+import React from 'react'
 
 import { tw } from '@/lib/tailwind'
-import React from 'react'
 export const NotiScreen = () => {
   return (
     <View style={tw('flex flex-1 bg-gray-100')}>

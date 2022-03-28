@@ -1,14 +1,19 @@
-import { ScrollView, View, Text } from 'react-native'
+import type { LeaveParse } from '@/types/leave'
+
+import { ScrollView, View } from 'react-native'
 
 import { tw } from '@/lib/tailwind'
 
 import { PendingComponent } from './PendingContainer'
-import { AddButton } from './AddButton'
-export const LeavePending = () => {
+export const LeavePending = ({ leaveList }: { leaveList: LeaveParse[] }) => {
   return (
     <View style={tw('flex relative flex-1 bg-gray-200')}>
       <ScrollView>
-        <PendingComponent />
+        <ScrollView>
+          {leaveList.map((obj, index) => (
+            <PendingComponent leave={obj} key={index} />
+          ))}
+        </ScrollView>
       </ScrollView>
     </View>
   )

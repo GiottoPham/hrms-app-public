@@ -3,3 +3,5 @@ export const LAST_VISITED_EXPLORE_MAP_ROUTE_KEY = 'last-visited-explore-map-rout
 export const AUTH = 'auth'
 export const CURRENT_USER = 'current-user'
 export const EMPLOYEE = 'employee'
+export const LEAVE = 'leave'
+export const CHECKIN = 'checkin'

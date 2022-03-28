@@ -4,18 +4,28 @@ import type { CheckinTabProps } from '@/types/check-in'
 import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { BarCodeEvent, BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner'
+import { BarCodeEvent, BarCodeScanner } from 'expo-barcode-scanner'
 import { Text, StyleSheet, Button, View, TouchableOpacity, Linking } from 'react-native'
-import Camera, { RNCamera } from 'react-native-camera'
-import QRCodeScanner from 'react-native-qrcode-scanner'
-import { da } from 'date-fns/locale'
 import { useNavigation } from '@react-navigation/native'
+import DeviceInfo from 'react-native-device-info'
+import { format } from 'date-fns'
 
 import { tw } from '@/lib/tailwind'
+import { useCheckin_inRequest } from '@/state/checkin-mutation'
+import { useCurrentUser } from '@/state/auth-queries'
 
 export const CheckinQR = ({
   navigation,
-}: MaterialTopTabScreenProps<CheckinTabProps, 'CheckinQR'>) => {
+}: {
+  navigation: MaterialTopTabScreenProps<CheckinTabProps, 'CheckinQR'>
+}) => {
+  const { currentUser } = useCurrentUser()
+  const check_inInput = {
+    userId: currentUser?.id,
+    deviceId: DeviceInfo.getDeviceId(),
+    date: new Date().toISOString(),
+    timeIn: format(new Date(), 'HH:mm:ss'),
+  }
   const [hasPermission, setHasPermission] = useState(false)
   const [scanned, setScanned] = useState(false)
   const [startScan, setStartScan] = useState(false)
@@ -36,6 +46,7 @@ export const CheckinQR = ({
   }, [navigation])
 
   const navigationBack = useNavigation<StackNavigationProp<RootStackParamList>>()
+  const { sendCheckin_inRequest } = useCheckin_inRequest()
 
   const handleBarCodeScanned = ({ type, data }: BarCodeEvent) => {
     setScanned(true)
@@ -44,19 +55,14 @@ export const CheckinQR = ({
     fetchData(data)
     if (data == 'NBNHR-03/12') {
       alert('You successfully checked in')
+      sendCheckin_inRequest(check_inInput)
       navigationBack.navigate('BottomTabs', {
         screen: 'CheckinBottom',
         params: { isChecking: true },
       })
     } else alert("Please scan company's QR")
+    setStartScan(false)
   }
-
-  // if (hasPermission === null) {
-  //   return <Text>Requesting for camera permission</Text>
-  // }
-  // if (hasPermission === false) {
-  //   return <Text>No access to camera</Text>
-  // }
 
   return (
     <View style={tw('flex-1')}>
@@ -76,7 +82,9 @@ export const CheckinQR = ({
           style={StyleSheet.absoluteFillObject}
         />
       )}
-      {scanned && startScan && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+      {scanned && startScan && (
+        <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
+      )}
     </View>
   )
 }

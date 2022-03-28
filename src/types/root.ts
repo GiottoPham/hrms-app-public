@@ -23,7 +23,10 @@ export type RootTabParamList = {
   Information: undefined
   Notification: undefined
   CreateLeave: undefined
-  CheckinMethod: undefined
+  CheckinMethod: {
+    userId: number
+    deviceId: string
+  }
 }
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = StackScreenProps<
   RootStackParamList,

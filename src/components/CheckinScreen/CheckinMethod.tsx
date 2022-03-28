@@ -1,4 +1,6 @@
 import type { CheckinTabProps } from '@/types/check-in'
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import type { RootTabParamList } from '@/types/root'
 
 import { ScrollView, View, Text } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
@@ -9,9 +11,10 @@ import { tw } from '@/lib/tailwind'
 
 import { CheckinGPS } from './CheckinGPS'
 import { CheckinQR } from './CheckinQR'
-export const CheckinMethod = () => {
+export const CheckinMethod = ({
+  route,
+}: BottomTabScreenProps<RootTabParamList, 'CheckinMethod'>) => {
   const Tab = createMaterialTopTabNavigator<CheckinTabProps>()
-
   return (
     <View style={tw('flex flex-1 bg-white')}>
       <Tab.Navigator

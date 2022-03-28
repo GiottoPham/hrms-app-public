@@ -5,7 +5,7 @@ export const fetchLeaves = (id: number): Promise<Leaves> => {
   return axios
     .request({
       method: 'GET',
-      url: `/api/v1/getLeave/${id}`,
+      url: `/api/v1/getLeave?userId=${id}`,
     })
     .then((res) => res.data)
 }
@@ -17,4 +17,7 @@ export const sendLeaveRequest = (leaveParams: LeaveInputParams) => {
       data: leaveParams,
     })
     .then((res) => res.data)
+    .catch((error) => {
+      console.log('hello')
+    })
 }
