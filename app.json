@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/Picture2.png",
-      "resizeMode":"cover"
+      "resizeMode": "cover"
     },
     "userInterfaceStyle": "automatic",
     "updates": {
@@ -18,15 +18,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "infoPlist":{
-        "NSCameraUsageDescription":"This app needs camera to scan QR Code surving checkin purpose!",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs camera to scan QR Code surving checkin purpose!",
         "NSPhotoLibraryAddUsageDescription": "Your message to user when the photo l",
         "NSPhotoLibraryUsageDescription": "Your message to user when the photo library is accessed for the first time",
         "NSMicrophoneUsageDescription": "Your message to user when the microsphone is accessed for the first time",
-        "NSLocationWhenInUseUsageDescription":  "This app needs your location surving checkin purpose!",
-        "NSLocationAlwaysUsageDescription":  "This app needs your location surving checkin purpose!"
-
-      }
+        "NSLocationWhenInUseUsageDescription": "This app needs your location surving checkin purpose!",
+        "NSLocationAlwaysUsageDescription": "This app needs your location surving checkin purpose!"
+      },
+      "bundleIdentifier": "1"
     },
     "android": {
       "adaptiveIcon": {

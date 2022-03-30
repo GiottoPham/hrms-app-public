@@ -3,7 +3,7 @@ import type { RootStackParamList, RootTabParamList } from '@/types/root'
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { View, Text, Dimensions, Pressable, TouchableOpacity } from 'react-native'
+import { View, Text, Dimensions, Pressable, TouchableOpacity, ActivityIndicator } from 'react-native'
 import CircularProgress from 'react-native-circular-progress-indicator'
 import React, { useEffect, useState } from 'react'
 import Svg, { Circle } from 'react-native-svg'
@@ -16,6 +16,7 @@ import { useHaveCheckedin } from '@/state/checkin-queries'
 import { useCurrentUser } from '@/state/auth-queries'
 
 export const CheckinScreen = ({ route }: BottomTabScreenProps<RootTabParamList>) => {
+  const weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const { width, height } = Dimensions.get('window')
   const { currentUser } = useCurrentUser()
   const { checkedin } = useHaveCheckedin(currentUser?.id as number, new Date().toISOString())
@@ -31,23 +32,39 @@ export const CheckinScreen = ({ route }: BottomTabScreenProps<RootTabParamList>)
     setIsCheckin(checkedin?.checkedIn == true)
     const timeNow = '2022-03-08T06:10:38.468Z'
 
-    if (checkedin?.checkedIn == true)
+    if (checkedin?.checkedIn == true) {
       setRate(
         (new Date(timeNow).getTime() -
-          new Date(format(new Date(), 'yyyy-MM-dd') + checkedin.timeIn).getTime()) /
+          new Date(format(new Date(), 'yyyy-MM-dd') + checkedin?.timeIn).getTime()) /
           (8 * 60 * 60 * 1000)
       )
-    progress.value = withTiming(rate, { duration: 2000 })
-  }, [isCheckedin])
+      progress.value = withTiming(rate, { duration: 2000 })
+    }
+  }, [checkedin])
+  useEffect(() => {
+    console.log(format(new Date(), 'yyyy-MM-dd') + ' ' + checkedin?.timeIn)
+
+    console.log(new Date('2022-03-29 09:13:09'))
+    const timeNow = '2022-03-08T06:10:38.468Z'
+
+    if (checkedin?.checkedIn == true) {
+      setRate(
+        (new Date(timeNow).getTime() -
+          new Date(format(new Date(), 'yyyy-MM-dd') + checkedin?.timeIn).getTime()) /
+          (8 * 60 * 60 * 1000)
+      )
+      progress.value = withTiming(rate, { duration: 2000 })
+    }
+  }, [])
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: 800 * (1 - progress.value),
   }))
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
-
+  if (!checkedin) return <ActivityIndicator size="small" color="#0000ff" />
   return (
     <View style={tw('z-0 h-full relative bg-gray-200 px-6 py-6')}>
       <View style={tw('z-0 bg-white relative h-100 w-90 rounded-3xl')}>
-        {isCheckin == false ? (
+        {checkedin?.checkedIn == false ? (
           <>
             <Text style={tw(' absolute right-33 top-28 text-xl')}>You haven't</Text>
             <Text style={tw(' absolute right-28 top-35 text-xl')}>checked in yet !</Text>
@@ -62,7 +79,7 @@ export const CheckinScreen = ({ route }: BottomTabScreenProps<RootTabParamList>)
             </Text>
           </View>
         )}
-        {isCheckin == false ? (
+        {checkedin?.checkedIn == false ? (
           <TouchableOpacity
             style={tw(
               'items-center justify-center absolute mt-2 z-40 bg-green-500 right-31 bottom-43 h-10 w-28 rounded-lg'
@@ -104,7 +121,9 @@ export const CheckinScreen = ({ route }: BottomTabScreenProps<RootTabParamList>)
             'items-center justify-center ml-11 bg-yellow-200 font-nunito h-13 w-70 rounded-3xl'
           )}
         >
-          <Text style={tw('font-nunito text-lg text-black')}>Tuesday, 08/03/2022</Text>
+          <Text style={tw('font-nunito text-lg text-black')}>
+            {weekday[new Date().getDay()]}, {format(new Date(), 'dd/MM/yyyy')}
+          </Text>
         </View>
       </View>
     </View>

@@ -1,9 +1,7 @@
-import type { styles } from 'react-native-circular-progress-indicator/src/circularProgressWithChild/types'
 import type { RootStackParamList } from '@/types/root'
 import type { StackNavigationProp } from '@react-navigation/stack'
-import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
-import type { CheckinTabProps } from '@/types/check-in'
 
+import * as Device from 'expo-device'
 import { getDistance } from 'geolib'
 import { View, Text, Dimensions, Image, ActivityIndicator } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
@@ -14,7 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import IconFoundation from 'react-native-vector-icons/Foundation'
 import { useNavigation } from '@react-navigation/native'
 import { format } from 'date-fns'
-import DeviceInfo from 'react-native-device-info'
+// import DeviceInfo from 'react-native-device-info'
 
 import { tw } from '@/lib/tailwind'
 import CompanyIcon from '@/assets/images/company_pin.png'
@@ -26,7 +24,7 @@ export const CheckinGPS = () => {
   const { currentUser } = useCurrentUser()
   const check_inInput = {
     userId: currentUser?.id,
-    deviceId: DeviceInfo.getDeviceId(),
+    deviceId: Device.deviceName,
     date: new Date().toISOString(),
     timeIn: format(new Date(), 'HH:mm:ss'),
   }

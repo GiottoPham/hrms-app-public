@@ -1,6 +1,7 @@
 import type { CheckinInputParams, CheckoutInputParams, HaveCheckedinOutput } from '@/types/check-in'
 
-import axios from 'axios'
+import { axios } from '@/lib/axios'
+
 export const sendCheckin_inRequest = (checkinParams: CheckinInputParams) => {
   return axios
     .request({
@@ -25,7 +26,11 @@ export const haveCheckedin = (userId: number, date: string): Promise<HaveChecked
   return axios
     .request({
       method: 'GET',
-      url: `/api/v1/haveCheckedin?userId=${userId}?date=${date}`,
+      url: `/api/v1/haveCheckedin`,
+      params: {
+        userId: userId,
+        date: date,
+      },
     })
     .then((res) => res.data)
 }

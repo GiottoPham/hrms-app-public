@@ -3,11 +3,11 @@ import type { StackNavigationProp } from '@react-navigation/stack'
 import type { CheckinTabProps } from '@/types/check-in'
 import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs'
 
+import * as Device from 'expo-device'
 import React, { useState, useEffect, useRef } from 'react'
 import { BarCodeEvent, BarCodeScanner } from 'expo-barcode-scanner'
 import { Text, StyleSheet, Button, View, TouchableOpacity, Linking } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import DeviceInfo from 'react-native-device-info'
 import { format } from 'date-fns'
 
 import { tw } from '@/lib/tailwind'
@@ -22,7 +22,7 @@ export const CheckinQR = ({
   const { currentUser } = useCurrentUser()
   const check_inInput = {
     userId: currentUser?.id,
-    deviceId: DeviceInfo.getDeviceId(),
+    deviceId: Device.deviceName,
     date: new Date().toISOString(),
     timeIn: format(new Date(), 'HH:mm:ss'),
   }

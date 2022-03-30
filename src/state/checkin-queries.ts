@@ -8,7 +8,7 @@ import { CHECKIN } from './query-keys'
 
 export const useHaveCheckedin = (userId: number, date: string) => {
   const { data: checkedin, ...rest } = useQuery<HaveCheckedinOutput, AxiosError>({
-    queryKey: [CHECKIN],
+    queryKey: [CHECKIN, userId],
     queryFn: () => haveCheckedin(userId, date),
     retry: false,
   })

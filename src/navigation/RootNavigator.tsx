@@ -8,9 +8,9 @@ import { LeaveScreen } from '@/screens/LeaveScreen'
 import { InformationScreen } from '@/screens/InformationScreen'
 import { NotiScreen } from '@/screens/NotiScreen'
 import { CreateFormLeave } from '@/screens/CreateFormLeave'
+import { CheckinMethod } from '@/components/CheckinScreen/CheckinMethod'
 
 import { BottomTabNavigator } from './BottomTabNavigation'
-import { CheckinMethod } from '@/components/CheckinScreen/CheckinMethod'
 const Stack = createStackNavigator<RootStackParamList>()
 
 export const RootNavigator = () => {
