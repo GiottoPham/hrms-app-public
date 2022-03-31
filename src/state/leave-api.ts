@@ -17,7 +17,4 @@ export const sendLeaveRequest = (leaveParams: LeaveInputParams) => {
       data: leaveParams,
     })
     .then((res) => res.data)
-    .catch((error) => {
-      console.log('hello')
-    })
 }

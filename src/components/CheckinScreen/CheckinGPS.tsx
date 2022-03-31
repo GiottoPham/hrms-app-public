@@ -23,7 +23,7 @@ export const CheckinGPS = () => {
   // const geolocation = new Geolocation()
   const { currentUser } = useCurrentUser()
   const check_inInput = {
-    userId: currentUser?.id,
+    userId: currentUser?.id as number,
     deviceId: Device.deviceName,
     date: new Date().toISOString(),
     timeIn: format(new Date(), 'HH:mm:ss'),

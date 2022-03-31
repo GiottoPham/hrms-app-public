@@ -14,6 +14,7 @@ import { CheckinQR } from './CheckinQR'
 export const CheckinMethod = ({
   route,
 }: BottomTabScreenProps<RootTabParamList, 'CheckinMethod'>) => {
+  console.log('dmmmm')
   const Tab = createMaterialTopTabNavigator<CheckinTabProps>()
   return (
     <View style={tw('flex flex-1 bg-white')}>

@@ -1,3 +1,5 @@
+import type { PersonalDetailInputParams } from '@/types/employee'
+
 import { ScrollView, View, Text, ImageBackground, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Avatar } from 'react-native-elements'
@@ -10,8 +12,10 @@ import { BasicInfo } from '@/components/InformationScreen/basicInfo'
 import { Insurance } from '@/components/InformationScreen/insurance'
 import { JobSalary } from '@/components/InformationScreen/jobSalary'
 import { useEmployee } from '@/state/employee-queries'
+import { useJobs } from '@/state/job-queries'
 export const InformationScreen = () => {
-  const { employee, isLoading } = useEmployee(1)
+  const { employee, isLoading } = useEmployee(17)
+  const { jobDetail } = useJobs(employee?.jobDetail.jobId as number)
   const [basic, setBasic] = useState(false)
   const [job, setJob] = useState(false)
   const [insurance, setInsurance] = useState(false)
@@ -33,9 +37,9 @@ export const InformationScreen = () => {
   useEffect(() => {
     setBasic(true)
   }, [])
-  if (isLoading) return null
+  if (isLoading || !jobDetail || !employee) return null
   // eslint-disable-next-line no-console
-  console.log(employee)
+  console.log('emp',employee)
   return (
     <View style={tw('flex flex-1 bg-gray-200')}>
       <ImageBackground
@@ -63,8 +67,10 @@ export const InformationScreen = () => {
             <Icon name={'edit'} size={18} color="#FFBE55" />
           </TouchableOpacity>
         </View>
-        <Text style={tw('text-white mt-2 font-nunito-bold text-xl')}>Pham Khang Nguyen</Text>
-        <Text style={tw('text-white font-nunito text-base')}>Junior Frontend Developer</Text>
+        <Text style={tw('text-white mt-2 font-nunito-bold text-xl')}>
+          {employee?.personalDetail.firstName} {employee?.personalDetail.lastName}
+        </Text>
+        <Text style={tw('text-white font-nunito text-base')}>{jobDetail.title}</Text>
         <View style={tw('justify-evenly items-center flex-row py-3')}>
           <TouchableOpacity
             style={tw('justify-evenly flex-row items-center h-10 w-1/3')}
@@ -94,7 +100,7 @@ export const InformationScreen = () => {
         </View>
       </ImageBackground>
       <ScrollView style={tw('bg-black-900')}>
-        {basic && <BasicInfo />}
+        {basic && <BasicInfo info={employee?.personalDetail} />}
         {insurance && <Insurance />}
         {job && <JobSalary />}
       </ScrollView>
