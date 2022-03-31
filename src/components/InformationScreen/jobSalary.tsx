@@ -1,3 +1,5 @@
+import type { JobInputParams } from '@/types/job'
+
 import { ScrollView, View, Text, TextInput, TouchableOpacity } from 'react-native'
 import IconZo from 'react-native-vector-icons/Zocial'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -7,12 +9,11 @@ import IconEn from 'react-native-vector-icons/Entypo'
 import IconMate from 'react-native-vector-icons/MaterialCommunityIcons'
 import IconAw from 'react-native-vector-icons/FontAwesome5'
 import IconMa from 'react-native-vector-icons/MaterialIcons'
-
 import { Tooltip } from 'react-native-elements'
 import Popover from 'react-native-popover-view'
 
 import { tw } from '@/lib/tailwind'
-export const JobSalary = () => {
+export const JobSalary = ({ info }: { info: JobInputParams }) => {
   const [visible, setVisible] = useState(false)
 
   return (

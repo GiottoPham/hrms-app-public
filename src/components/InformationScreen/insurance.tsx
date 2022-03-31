@@ -1,3 +1,5 @@
+import type { InsuranceInputParams } from '@/types/employee'
+
 import { ScrollView, View, Text, TextInput, TouchableOpacity } from 'react-native'
 import IconZo from 'react-native-vector-icons/Zocial'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -6,12 +8,11 @@ import FieldSet from 'react-native-fieldset'
 import IconEn from 'react-native-vector-icons/Entypo'
 import IconMate from 'react-native-vector-icons/MaterialCommunityIcons'
 import IconAw from 'react-native-vector-icons/FontAwesome5'
-
 import { Tooltip } from 'react-native-elements'
 import Popover from 'react-native-popover-view'
 
 import { tw } from '@/lib/tailwind'
-export const Insurance = () => {
+export const Insurance = ({ info }: { info: InsuranceInputParams }) => {
   return (
     <View style={tw('px-5')}>
       <View style={tw('flex flex-row mb-2')}>
@@ -64,7 +65,7 @@ export const Insurance = () => {
             <View style={tw('ml-5')}>
               <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>To Date</Text>
               <View style={tw('flex flex-row items-center')}>
-              <IconAw name="calendar-alt" size={20} color="#ffbe55" style={tw('-mr-5')} />
+                <IconAw name="calendar-alt" size={20} color="#ffbe55" style={tw('-mr-5')} />
                 <TextInput
                   style={tw('h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10')}
                   value="31/12/2021"
@@ -79,7 +80,7 @@ export const Insurance = () => {
             <View>
               <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Province</Text>
               <View style={tw('flex flex-row items-center ')}>
-              <IconMate name="city-variant" size={20} color="#ffbe55" style={tw('-mr-5')} />
+                <IconMate name="city-variant" size={20} color="#ffbe55" style={tw('-mr-5')} />
                 <TextInput
                   style={tw('h-10 w-95 bg-transparent border-b border-yellow-600 text-white px-10')}
                   value="Ho Chi Minh City"
@@ -92,9 +93,11 @@ export const Insurance = () => {
           </View>
           <View style={tw('flex flex-row mb-2')}>
             <View>
-              <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Primary healthcare service establishment</Text>
+              <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>
+                Primary healthcare service establishment
+              </Text>
               <View style={tw('flex flex-row items-center ')}>
-              <IconAw name="hospital" size={20} color="#ffbe55" style={tw('-mr-5')} />
+                <IconAw name="hospital" size={20} color="#ffbe55" style={tw('-mr-5')} />
                 <TextInput
                   style={tw('h-10 w-95 bg-transparent border-b border-yellow-600 text-white px-10')}
                   value="Benh vien Quan 3"
