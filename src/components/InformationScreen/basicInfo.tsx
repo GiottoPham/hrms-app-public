@@ -11,6 +11,7 @@ import Popover from 'react-native-popover-view'
 
 import { tw } from '@/lib/tailwind'
 import { useCities, useDistricts, useWards } from '@/state/countries-queries'
+import { format } from 'date-fns'
 export const BasicInfo = ({
   info,
 }: {
@@ -64,7 +65,7 @@ export const BasicInfo = ({
             <Icon name="birthday-cake" size={20} color="#ffbe55" style={tw('-mr-5')} />
             <TextInput
               style={tw('h-10 w-50 bg-transparent border-b border-yellow-600 text-white px-10')}
-              value={info.dateOfBirth}
+              value={format(new Date(info.dateOfBirth), 'dd-MM-yyyy')}
               underlineColorAndroid="transparent"
               editable={false}
               selectTextOnFocus={false}

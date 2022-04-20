@@ -61,14 +61,18 @@ export const LeaveScreen = () => {
         reason: item.reason,
         applicationDate: item.applicationDate,
       }
-      if (item.status == 0) listAgreeEffect.push(obj)
-      else if (item.status == 1) listIgnoreEffect.push(obj)
-      else listPendingEffect.push(obj)
+      if (
+        format(new Date(obj.applicationDate), 'dd-MM-yyyy') === format(dateAvailable, 'dd-MM-yyyy')
+      ) {
+        if (item.status == 0) listAgreeEffect.push(obj)
+        else if (item.status == 1) listIgnoreEffect.push(obj)
+        else listPendingEffect.push(obj)
+      }
     })
     setListPending(listPendingEffect)
     setListIgnore(listIgnoreEffect)
     setListAgree(listAgreeEffect)
-  }, [leaves])
+  }, [leaves, dateAvailable])
   return (
     <View style={tw('flex flex-1 bg-gray-200')}>
       {!add && (
@@ -91,6 +95,7 @@ export const LeaveScreen = () => {
 
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
+            textColor="#444444"
             date={dateAvailable}
             mode="date"
             onConfirm={handleConfirm}

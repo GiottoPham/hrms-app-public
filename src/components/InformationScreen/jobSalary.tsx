@@ -1,6 +1,14 @@
 import type { JobInputParams } from '@/types/job'
+import type { JobDetailInputParams } from '@/types/employee'
 
-import { ScrollView, View, Text, TextInput, TouchableOpacity } from 'react-native'
+import {
+  ScrollView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native'
 import IconZo from 'react-native-vector-icons/Zocial'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import React, { useState } from 'react'
@@ -11,19 +19,26 @@ import IconAw from 'react-native-vector-icons/FontAwesome5'
 import IconMa from 'react-native-vector-icons/MaterialIcons'
 import { Tooltip } from 'react-native-elements'
 import Popover from 'react-native-popover-view'
+import { format } from 'date-fns'
 
 import { tw } from '@/lib/tailwind'
-export const JobSalary = ({ info }: { info: JobInputParams }) => {
+import { useJobs } from '@/state/job-queries'
+export const JobSalary = ({ info }: { info: JobDetailInputParams }) => {
+  // let realSalary = info.salary
+  // if (info.salaryGroup == 1) realSalary = realSalary * 1.1
   const [visible, setVisible] = useState(false)
+  const { jobDetail } = useJobs(info.jobId as number)
 
+  if (!info || !jobDetail) return <ActivityIndicator size="small" color="#0000ff" />
+  
   return (
     <View style={tw('px-5')}>
-      <View style={tw('flex flex-row mb-2')}>
-        <View style={tw('mt-4 w-95 border-yellow-600 border-t h-80 ')}>
+      <View style={tw('flex flex-row ')}>
+        <View style={tw('mt-4 w-95 border-yellow-600 border-t h-50 ')}>
           <View style={tw('h-5 w-35 -ml-4 items-center bg-black-900 top--3 ')}>
             <Text style={tw('text-yellow-400 text-base')}>Job Information</Text>
           </View>
-          <View style={tw('flex flex-row mb-2')}>
+          <View style={tw('flex flex-row mb-2 ml-1')}>
             <View>
               <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Join Date</Text>
               <View style={tw('flex flex-row items-center ')}>
@@ -31,7 +46,7 @@ export const JobSalary = ({ info }: { info: JobInputParams }) => {
 
                 <TextInput
                   style={tw('h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10')}
-                  value="03/03/2022"
+                  value={format(new Date(info.joinDate), 'dd-MM-yyyy')}
                   underlineColorAndroid="transparent"
                   editable={false}
                   selectTextOnFocus={false}
@@ -51,7 +66,7 @@ export const JobSalary = ({ info }: { info: JobInputParams }) => {
                       style={tw(
                         'h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10'
                       )}
-                      value="Junior Frontend Developer"
+                      value={jobDetail?.title}
                       underlineColorAndroid="transparent"
                       editable={false}
                       onPressIn={() => setVisible(true)}
@@ -59,7 +74,7 @@ export const JobSalary = ({ info }: { info: JobInputParams }) => {
                     />
                   }
                 >
-                  <Text style={tw('text-base')}>Junior Frontend Developer</Text>
+                  <Text style={tw('text-base')}>{jobDetail?.title}</Text>
                 </Popover>
               </View>
             </View>
@@ -84,39 +99,91 @@ export const JobSalary = ({ info }: { info: JobInputParams }) => {
                 <IconAw name="calendar-alt" size={20} color="#ffbe55" style={tw('-mr-5')} />
                 <TextInput
                   style={tw('h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10')}
+                  value="129379493"
+                  underlineColorAndroid="transparent"
+                  editable={false}
+                  selectTextOnFocus={false}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+      <View style={tw('flex flex-row mb-2')}>
+        <View style={tw('mt-1 w-95 border-yellow-600 border-t h-80 ')}>
+          <View style={tw('h-5 w-35 -ml-4 items-center bg-black-900 top--3 ')}>
+            <Text style={tw('text-yellow-400 text-base')}>Salary Information</Text>
+          </View>
+          <View style={tw('flex flex-row mb-2')}>
+            <View>
+              <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Salary </Text>
+              <View style={tw('flex flex-row items-center ')}>
+                <IconAw name="money-check-alt" size={20} color="#ffbe55" style={tw('-mr-5')} />
+                <TextInput
+                  style={tw('h-10 w-95 bg-transparent border-b border-yellow-600 text-white px-10')}
+                  value={info.salary.toString()}
+                  underlineColorAndroid="transparent"
+                  editable={false}
+                  selectTextOnFocus={false}
+                />
+              </View>
+            </View>
+          </View>
+          {info.bonus.map((obj, index) => (
+            <View style={tw('flex flex-row mb-2 ml-1')} key={index}>
+              <View>
+                <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Bonus Name</Text>
+                <View style={tw('flex flex-row items-center ')}>
+                  <IconAw name="check-circle" size={20} color="#ffbe55" style={tw('-mr-5')} />
+                  <TextInput
+                    style={tw(
+                      'h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10'
+                    )}
+                    value={obj.bonusName}
+                    underlineColorAndroid="transparent"
+                    editable={false}
+                    selectTextOnFocus={false}
+                  />
+                </View>
+              </View>
+              <View style={tw('ml-5')}>
+                <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Amount</Text>
+                <View style={tw('flex flex-row items-center')}>
+                  <IconAw name="money-bill" size={20} color="#ffbe55" style={tw('-mr-5')} />
+                  <TextInput
+                    style={tw(
+                      'h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10'
+                    )}
+                    value={obj.bonusAmount.toString()}
+                    underlineColorAndroid="transparent"
+                    editable={false}
+                    selectTextOnFocus={false}
+                  />
+                </View>
+              </View>
+            </View>
+          ))}
+          <View style={tw('flex flex-row mb-2 ml-1')}>
+            <View>
+              <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Bonus Name</Text>
+              <View style={tw('flex flex-row items-center ')}>
+                <IconMate name="network" size={20} color="#ffbe55" style={tw('-mr-5')} />
+                <TextInput
+                  style={tw('h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10')}
+                  value="CEO"
+                  underlineColorAndroid="transparent"
+                  editable={false}
+                  selectTextOnFocus={false}
+                />
+              </View>
+            </View>
+            <View style={tw('ml-5')}>
+              <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Amount</Text>
+              <View style={tw('flex flex-row items-center')}>
+                <IconAw name="calendar-alt" size={20} color="#ffbe55" style={tw('-mr-5')} />
+                <TextInput
+                  style={tw('h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10')}
                   value="99999999"
-                  underlineColorAndroid="transparent"
-                  editable={false}
-                  selectTextOnFocus={false}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={tw('flex flex-row mb-2')}>
-            <View>
-              <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Province</Text>
-              <View style={tw('flex flex-row items-center ')}>
-                <IconMate name="city-variant" size={20} color="#ffbe55" style={tw('-mr-5')} />
-                <TextInput
-                  style={tw('h-10 w-95 bg-transparent border-b border-yellow-600 text-white px-10')}
-                  value="Ho Chi Minh City"
-                  underlineColorAndroid="transparent"
-                  editable={false}
-                  selectTextOnFocus={false}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={tw('flex flex-row mb-2')}>
-            <View>
-              <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>
-                Primary healthcare service establishment
-              </Text>
-              <View style={tw('flex flex-row items-center ')}>
-                <IconAw name="hospital" size={20} color="#ffbe55" style={tw('-mr-5')} />
-                <TextInput
-                  style={tw('h-10 w-95 bg-transparent border-b border-yellow-600 text-white px-10')}
-                  value="Benh vien Quan 3"
                   underlineColorAndroid="transparent"
                   editable={false}
                   selectTextOnFocus={false}

@@ -17,7 +17,7 @@ export type LeaveParse = {
   applicationDate: string
 }
 export enum LeaveType {
-  Unpaid = 'Unpaid Leave',
   Paid = 'Paid Leave',
+  Unpaid = 'Annual Leave',
 }
 export type LeaveTypeNum = 0 | 1

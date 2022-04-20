@@ -11,7 +11,6 @@ import * as Location from 'expo-location'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import IconFoundation from 'react-native-vector-icons/Foundation'
 import { useNavigation } from '@react-navigation/native'
-import { format } from 'date-fns'
 // import DeviceInfo from 'react-native-device-info'
 
 import { tw } from '@/lib/tailwind'
@@ -24,15 +23,16 @@ export const CheckinGPS = () => {
   const { currentUser } = useCurrentUser()
   const check_inInput = {
     userId: currentUser?.id as number,
-    deviceId: Device.deviceName,
+    deviceId: Device.deviceName as string,
     date: new Date().toISOString(),
-    timeIn: format(new Date(), 'HH:mm:ss'),
+    timeIn: new Date().toISOString(),
   }
   const [refresh, setRefresh] = useState(false)
   const onPress = () => setRefresh(!refresh)
   const company_latitude = 10.78697
   const company_longtitude = 106.67218
-
+  // const company_latitude = 13.78697
+  // const company_longtitude = 99.67218
   const { width, height } = Dimensions.get('window')
   const ASPECT_RATIO = width / height
   const LATITUDE_DELTA = 0.0922
@@ -86,10 +86,10 @@ export const CheckinGPS = () => {
   useEffect(() => {
     getLocationAsync()
   }, [refresh])
-  getDistance(
-    { latitude: 20.0504188, longitude: 64.4139099 },
-    { latitude: 51.528308, longitude: -0.3817765 }
-  )
+  // getDistance(
+  //   { latitude: 20.0504188, longitude: 64.4139099 },
+  //   { latitude: 51.528308, longitude: -0.3817765 }
+  // )
   const { sendCheckin_inRequest } = useCheckin_inRequest()
   const handleOnConfirm = () => {
     sendCheckin_inRequest(check_inInput)

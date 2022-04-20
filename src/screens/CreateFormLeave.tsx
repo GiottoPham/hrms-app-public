@@ -64,11 +64,14 @@ export const CreateFormLeave = () => {
   })
   const { sendLeaveRequest } = useSendLeaveRequest()
   const handleSubmit = () => {
-    let newAmount = 3
-    if (amount == 0) newAmount = 1 / 2
+    let newAmount = 0
+    if (amount == 0) newAmount = Number(1 / 2)
     else if (amount == 1) newAmount = 1
     else newAmount = differenceInDays(dateAvailable2, dateAvailable)
-    sendLeaveRequest(leaveReq)
+    console.log(leaveReq)
+    if (leaveReq.toDate == '')
+      sendLeaveRequest({ ...leaveReq, amount: newAmount, toDate: leaveReq.fromDate })
+    else sendLeaveRequest({ ...leaveReq, amount: newAmount })
   }
   // const [keyboardHeight, setKeyboardHeight] = useState(0)
   // function onKeyboardDidShow(e: KeyboardEvent) {
@@ -172,6 +175,7 @@ export const CreateFormLeave = () => {
             </View>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
+              textColor="#444444"
               date={dateAvailable}
               mode="date"
               onConfirm={handleConfirm}
@@ -200,6 +204,7 @@ export const CreateFormLeave = () => {
             </View>
             <DateTimePickerModal
               isVisible={isDatePickerVisible2}
+              textColor="#444444"
               date={dateAvailable2}
               mode="date"
               onConfirm={handleConfirm2}

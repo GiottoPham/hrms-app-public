@@ -4,13 +4,14 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { CHECKIN } from './query-keys'
 import { sendCheckin_inRequest, sendCheckin_outRequest } from './checkin-api'
+import { useCurrentUser } from './auth-queries'
 export const useCheckin_inRequest = () => {
   const queryClient = useQueryClient()
-
+  const { currentUser } = useCurrentUser()
   const { mutateAsync, ...rest } = useMutation({
     mutationFn: (params: CheckinInputParams) => sendCheckin_inRequest(params),
     onSuccess: () => {
-      queryClient.refetchQueries([CHECKIN])
+      if (currentUser) queryClient.refetchQueries([CHECKIN, currentUser.id])
     },
   })
 
@@ -22,11 +23,11 @@ export const useCheckin_inRequest = () => {
 
 export const useCheckin_outRequest = () => {
   const queryClient = useQueryClient()
-
+  const { currentUser } = useCurrentUser()
   const { mutateAsync, ...rest } = useMutation({
     mutationFn: (params: CheckoutInputParams) => sendCheckin_outRequest(params),
     onSuccess: () => {
-      queryClient.refetchQueries([CHECKIN])
+      if (currentUser) queryClient.refetchQueries([CHECKIN, currentUser.id])
     },
   })
 

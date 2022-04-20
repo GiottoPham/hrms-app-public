@@ -39,7 +39,7 @@ export const InformationScreen = () => {
   }, [])
   if (isLoading || !jobDetail || !employee) return null
   // eslint-disable-next-line no-console
-  console.log('emp',employee)
+  console.log('emp', employee)
   return (
     <View style={tw('flex flex-1 bg-gray-200')}>
       <ImageBackground
@@ -101,8 +101,8 @@ export const InformationScreen = () => {
       </ImageBackground>
       <ScrollView style={tw('bg-black-900')}>
         {basic && <BasicInfo info={employee?.personalDetail} />}
-        {insurance && <Insurance />}
-        {job && <JobSalary />}
+        {insurance && <Insurance info={employee.insurance} />}
+        {job && <JobSalary info={employee.jobDetail} />}
       </ScrollView>
     </View>
   )
