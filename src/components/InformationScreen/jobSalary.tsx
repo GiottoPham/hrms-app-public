@@ -1,23 +1,10 @@
-import type { JobInputParams } from '@/types/job'
 import type { JobDetailInputParams } from '@/types/employee'
 
-import {
-  ScrollView,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native'
-import IconZo from 'react-native-vector-icons/Zocial'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { View, Text, TextInput, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
-import FieldSet from 'react-native-fieldset'
-import IconEn from 'react-native-vector-icons/Entypo'
 import IconMate from 'react-native-vector-icons/MaterialCommunityIcons'
 import IconAw from 'react-native-vector-icons/FontAwesome5'
 import IconMa from 'react-native-vector-icons/MaterialIcons'
-import { Tooltip } from 'react-native-elements'
 import Popover from 'react-native-popover-view'
 import { format } from 'date-fns'
 
@@ -30,7 +17,7 @@ export const JobSalary = ({ info }: { info: JobDetailInputParams }) => {
   const { jobDetail } = useJobs(info.jobId as number)
 
   if (!info || !jobDetail) return <ActivityIndicator size="small" color="#0000ff" />
-  
+
   return (
     <View style={tw('px-5')}>
       <View style={tw('flex flex-row ')}>
@@ -154,7 +141,10 @@ export const JobSalary = ({ info }: { info: JobDetailInputParams }) => {
                     style={tw(
                       'h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10'
                     )}
-                    value={obj.bonusAmount.toString()}
+                    value={obj.bonusAmount.toLocaleString('vi', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
                     underlineColorAndroid="transparent"
                     editable={false}
                     selectTextOnFocus={false}
@@ -163,34 +153,6 @@ export const JobSalary = ({ info }: { info: JobDetailInputParams }) => {
               </View>
             </View>
           ))}
-          <View style={tw('flex flex-row mb-2 ml-1')}>
-            <View>
-              <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Bonus Name</Text>
-              <View style={tw('flex flex-row items-center ')}>
-                <IconMate name="network" size={20} color="#ffbe55" style={tw('-mr-5')} />
-                <TextInput
-                  style={tw('h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10')}
-                  value="CEO"
-                  underlineColorAndroid="transparent"
-                  editable={false}
-                  selectTextOnFocus={false}
-                />
-              </View>
-            </View>
-            <View style={tw('ml-5')}>
-              <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Amount</Text>
-              <View style={tw('flex flex-row items-center')}>
-                <IconAw name="calendar-alt" size={20} color="#ffbe55" style={tw('-mr-5')} />
-                <TextInput
-                  style={tw('h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10')}
-                  value="99999999"
-                  underlineColorAndroid="transparent"
-                  editable={false}
-                  selectTextOnFocus={false}
-                />
-              </View>
-            </View>
-          </View>
         </View>
       </View>
     </View>

@@ -4,7 +4,7 @@ export type Employee = {
     avatar: string
   }
   jobDetail: JobDetailInputParams
-  insurance: InsuranceInputParams
+  insuranceDetail: InsuranceInputParams
 }
 export type PersonalDetailInputParams = {
   avatar: File | Blob
@@ -33,7 +33,7 @@ export type Address = {
 }
 export type Bonus = {
   bonusName: string
-  bonusAmount: string
+  bonusAmount: number
 }
 
 export type InsuranceInputParams = {

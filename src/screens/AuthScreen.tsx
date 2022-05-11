@@ -11,6 +11,7 @@ import {
   KeyboardEvent,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native'
 import { useEffect, useState } from 'react'
 
@@ -35,7 +36,11 @@ export const AuthScreen = () => {
     setKeyboardHeight(0)
   }
   const handleLogin = () => {
-    login({ username: username, password: password }).then(() => navigation.replace('BottomTabs'))
+    login({ username: username, password: password })
+      .then(() => navigation.replace('BottomTabs'))
+      .catch(() =>
+        Alert.alert('Authenticated failed', 'Please input your username and password again!')
+      )
   }
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', onKeyboardDidShow)

@@ -1,20 +1,15 @@
 import type { InsuranceInputParams } from '@/types/employee'
 
-import { ScrollView, View, Text, TextInput, TouchableOpacity } from 'react-native'
-import IconZo from 'react-native-vector-icons/Zocial'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import React, { useState } from 'react'
-import FieldSet from 'react-native-fieldset'
-import IconEn from 'react-native-vector-icons/Entypo'
+import { View, Text, TextInput, ActivityIndicator } from 'react-native'
+import React from 'react'
 import IconMate from 'react-native-vector-icons/MaterialCommunityIcons'
 import IconAw from 'react-native-vector-icons/FontAwesome5'
-import { Tooltip } from 'react-native-elements'
-import Popover from 'react-native-popover-view'
 
 import { tw } from '@/lib/tailwind'
 export const Insurance = ({ info }: { info: InsuranceInputParams }) => {
+  if (!info) return <ActivityIndicator size="small" color="#0000ff" />
   return (
-    <View style={tw('px-5')}>
+    <View style={tw('px-5 pb-5')}>
       <View style={tw('flex flex-row mb-2')}>
         <View style={tw('mt-4 w-95 border-yellow-600 border-t h-80 ')}>
           <View style={tw('h-5 w-35 -ml-4 items-center bg-black-900 top--3 ')}>

@@ -28,11 +28,11 @@ export const useAuth = () => {
   const queryClient = useQueryClient()
   const auth = queryClient.getQueryData<Auth>(AUTH)
   let token = ''
-  const getToken = async () => {
-    token = (await SecureStore.getItemAsync('token')) as string
-  }
-  getToken()
-  if (!auth && token) {
+  if (!auth) {
+    const getToken = async () => {
+      token = (await SecureStore.getItemAsync('token')) as string
+    }
+    getToken()
     const isTokenExpired = (token: string) =>
       Date.now() >= JSON.parse(atob(token.split('.')[1])).exp * 1000
     if (token && !isTokenExpired(token))

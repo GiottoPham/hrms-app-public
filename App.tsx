@@ -2,6 +2,8 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { Platform } from 'react-native'
 import { useEffect } from 'react'
 import * as Calendar from 'expo-calendar'
+import * as Device from 'expo-device'
+import * as Notifications from 'expo-notifications'
 
 import { RootNavigator } from '@/navigation/RootNavigator'
 import { useFonts } from '@/state/app-queries'

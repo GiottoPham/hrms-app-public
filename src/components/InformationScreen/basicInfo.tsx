@@ -1,17 +1,17 @@
-import type { JobDetailInputParams, PersonalDetailInputParams } from '@/types/employee'
+import type { PersonalDetailInputParams } from '@/types/employee'
 import type { District, Ward } from '@/types/coutries'
 
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import IconZo from 'react-native-vector-icons/Zocial'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import IconEn from 'react-native-vector-icons/Entypo'
 import IconMate from 'react-native-vector-icons/MaterialCommunityIcons'
 import Popover from 'react-native-popover-view'
+import { format } from 'date-fns'
 
 import { tw } from '@/lib/tailwind'
 import { useCities, useDistricts, useWards } from '@/state/countries-queries'
-import { format } from 'date-fns'
 export const BasicInfo = ({
   info,
 }: {
@@ -26,30 +26,6 @@ export const BasicInfo = ({
   const { districts: districtsTemp } = useDistricts(info?.temporaryAddress.cityId as number)
   const { wards: wardsPer } = useWards(info?.permanentAddress.districtId as number)
   const { wards: wardsTemp } = useWards(info?.temporaryAddress.districtId as number)
-  // const getTheDistrictName = ({
-  //   district,
-  //   district_id,
-  // }: {
-  //   district: District[]
-  //   district_id: number
-  // }) => {
-  //   return district.find((ele) => ele.district_id === district_id)?.district_name
-  // }
-  // const getTheWardName = ({
-  //   district,
-  //   district_id,
-  // }: {
-  //   district: District[]
-  //   district_id: number
-  // }) => {
-  //   for (let i = 0; i < district.length; i++)
-  //     if (district[i].district_id === district_id) return district[i].district_name
-  //   return 'None'
-  // }
-  // useEffect(() => {}, [checkedin])
-  // const onPress = () => {
-  //   setVisible(!visible)
-  // }
   if (!info || !cities || !districtsPer || !districtsTemp || !wardsPer || !wardsTemp)
     return <ActivityIndicator size="small" color="#0000ff" />
   const findWard = (wards: Ward[], wardId: number) =>
@@ -57,7 +33,7 @@ export const BasicInfo = ({
   const findDistrict = (districts: District[], districtId: number) =>
     districts.find((district) => district.district_id == districtId)?.district_name
   return (
-    <View style={tw('px-5')}>
+    <View style={tw('px-5 pb-10')}>
       <View style={tw('flex flex-row mb-2')}>
         <View>
           <Text style={tw('font-nunito text-yellow-400 text-base mt-1')}>Date of Birth</Text>
@@ -167,9 +143,6 @@ export const BasicInfo = ({
             <View style={tw('flex flex-row items-center')}>
               <IconMate name="home-city" size={20} color="#ffbe55" style={tw('-mr-5 ')} />
               <TextInput
-                onPressIn={() => {
-                  console.log('hello')
-                }}
                 style={tw('h-10 w-38 bg-transparent border-b border-yellow-600 text-white px-10')}
                 value={findWard(wardsTemp, info.temporaryAddress.wardId)}
                 underlineColorAndroid="transparent"
@@ -250,9 +223,6 @@ export const BasicInfo = ({
             <View style={tw('flex flex-row items-center')}>
               <IconMate name="home-city" size={20} color="#ffbe55" style={tw('-mr-5 ')} />
               <TextInput
-                onPressIn={() => {
-                  console.log('hello')
-                }}
                 style={tw('h-10 w-38 bg-transparent border-b border-yellow-600 text-white px-10')}
                 value={findWard(wardsTemp, info.permanentAddress.wardId)}
                 underlineColorAndroid="transparent"

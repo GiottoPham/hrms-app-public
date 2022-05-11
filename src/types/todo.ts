@@ -1,8 +1,10 @@
 export type Todo = {
+  id: number
   notes: string
   title: string
-  alarm: {
-    isOn: boolean
-    time: string
-  }
+  time: string
+}
+export type TodoParams = {
+  toDateTime: string
+  fromDateTIme: string
 }

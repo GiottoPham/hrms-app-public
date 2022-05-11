@@ -1,9 +1,7 @@
-import type { PersonalDetailInputParams } from '@/types/employee'
-
+/* eslint-disable import/no-duplicates */
 import { ScrollView, View, Text, ImageBackground, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Avatar } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/MaterialIcons'
 import IconIo from 'react-native-vector-icons/Ionicons'
 import IconMate from 'react-native-vector-icons/MaterialIcons'
 
@@ -53,19 +51,12 @@ export const InformationScreen = () => {
             size={120}
             rounded
             source={{
-              uri: 'https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg',
+              uri: employee.personalDetail.avatar,
             }}
             title={'Nguyen'}
             avatarStyle={tw('border-2 border-yellow-600')}
             containerStyle={tw('mt-15')}
           />
-          <TouchableOpacity
-            style={tw(
-              'h-7 w-7 mr-4 items-center bg-black border-yellow-600 justify-center absolute right-0 bottom-0 rounded-full border-2'
-            )}
-          >
-            <Icon name={'edit'} size={18} color="#FFBE55" />
-          </TouchableOpacity>
         </View>
         <Text style={tw('text-white mt-2 font-nunito-bold text-xl')}>
           {employee?.personalDetail.firstName} {employee?.personalDetail.lastName}
@@ -101,7 +92,7 @@ export const InformationScreen = () => {
       </ImageBackground>
       <ScrollView style={tw('bg-black-900')}>
         {basic && <BasicInfo info={employee?.personalDetail} />}
-        {insurance && <Insurance info={employee.insurance} />}
+        {insurance && <Insurance info={employee.insuranceDetail} />}
         {job && <JobSalary info={employee.jobDetail} />}
       </ScrollView>
     </View>

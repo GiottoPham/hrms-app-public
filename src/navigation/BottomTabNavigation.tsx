@@ -27,10 +27,16 @@ import { SalaryIcon } from '@/assets/icons/SalaryIcon'
 import { CreateFormLeave } from '@/screens/CreateFormLeave'
 import { CheckinMethod } from '@/components/CheckinScreen/CheckinMethod'
 import { useCurrentUser } from '@/state/auth-queries'
+import { CreateTask } from '@/screens/CreateTask'
+import { useEmployee } from '@/state/employee-queries'
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 export const BottomTabNavigator = () => {
   const { currentUser } = useCurrentUser()
+  const { employee } = useEmployee(currentUser?.id as number)
+  // console.log(currentUser?.id)
+  // console.log(employee)
+  // if (!employee) return null
   return (
     <BottomTab.Navigator
       initialRouteName="CheckinBottom"
@@ -78,6 +84,12 @@ export const BottomTabNavigator = () => {
           Icon: InformationIcon,
         },
         {
+          name: 'CreateTask' as const,
+          label: 'Create Event',
+          Component: CreateTask,
+          Icon: CalendarIcon,
+        },
+        {
           name: 'CheckinMethod' as const,
           label: 'Select Checkin Method',
           Component: CheckinMethod,
@@ -118,7 +130,7 @@ export const BottomTabNavigator = () => {
                           size={32}
                           rounded
                           source={{
-                            uri: 'https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg',
+                            uri: employee?.personalDetail.avatar,
                           }}
                           title={'N'}
                         />

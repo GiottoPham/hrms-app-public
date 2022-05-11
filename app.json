@@ -24,7 +24,8 @@
         "NSPhotoLibraryUsageDescription": "Your message to user when the photo library is accessed for the first time",
         "NSMicrophoneUsageDescription": "Your message to user when the microsphone is accessed for the first time",
         "NSLocationWhenInUseUsageDescription": "This app needs your location surving checkin purpose!",
-        "NSLocationAlwaysUsageDescription": "This app needs your location surving checkin purpose!"
+        "NSLocationAlwaysUsageDescription": "This app needs your location surving checkin purpose!",
+        "NSCalendarsUsageDescription": "This app required to access calendar"
       },
       "bundleIdentifier": "1"
     },
@@ -37,6 +38,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": ""
+    "description": "",
+    "notification": {
+      "icon": "./assets/fff.png"
+    }
   }
 }

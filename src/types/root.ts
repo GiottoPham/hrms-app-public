@@ -12,6 +12,7 @@ export type RootStackParamList = {
   LeavePending: undefined
   CreateLeave: undefined
   CheckinMethod: undefined
+  CreateTask: undefined
 }
 
 export type RootTabParamList = {
@@ -27,6 +28,7 @@ export type RootTabParamList = {
     userId: number
     deviceId: string
   }
+  CreateTask: undefined
 }
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = StackScreenProps<
   RootStackParamList,

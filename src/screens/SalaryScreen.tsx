@@ -19,7 +19,11 @@ export const SalaryScreen = () => {
   const [showPIT, setShowPIT] = useState(false)
 
   const showPicker = useCallback((value) => setShow(value), [])
-
+  const dateNow = new Date()
+  const maxDayLastMonth = format(
+    new Date(dateNow.getFullYear(), dateNow.getMonth() + 1, 0),
+    'yyyy-MM-DD'
+  )
   return (
     <View style={tw('flex flex-1 bg-gray-200')}>
       <View style={tw('h-20 flex items-center justify-center')}>
@@ -39,13 +43,23 @@ export const SalaryScreen = () => {
       {show && (
         <DatePicker
           mode="monthYear"
+          options={{
+            backgroundColor: '#090C08',
+            textHeaderColor: '#FFA25B',
+            textDefaultColor: '#F6E7C1',
+            selectedTextColor: '#fff',
+            mainColor: '#F4722B',
+            textSecondaryColor: '#D6C7A1',
+            borderColor: 'rgba(122, 146, 165, 0.1)',
+          }}
           onMonthYearChange={(selectedDate: string) => {
             const words = selectedDate.split(' ')
-
             setDate(words[1] + '-' + words[0])
             showPicker(false)
           }}
           selected={date}
+          maximumDate={maxDayLastMonth}
+          selectorStartingYear={2000}
           minuteInterval={30}
         />
       )}

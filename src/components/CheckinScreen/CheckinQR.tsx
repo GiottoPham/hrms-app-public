@@ -21,8 +21,8 @@ export const CheckinQR = ({
 }) => {
   const { currentUser } = useCurrentUser()
   const check_inInput = {
-    userId: currentUser?.id,
-    deviceId: Device.deviceName,
+    userId: currentUser?.id as number,
+    deviceId: Device.deviceName as string,
     date: new Date().toISOString(),
     timeIn: format(new Date(), 'HH:mm:ss'),
   }

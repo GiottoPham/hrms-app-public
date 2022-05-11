@@ -2,7 +2,7 @@ import type { City, District, Ward } from '@/types/coutries'
 
 import axios from 'axios'
 const axiosWithCountries = axios.create({
-  baseURL: `https://arcane-taiga-55468.herokuapp.com/https://provinces.open-api.vn/api`,
+  baseURL: `https://provinces.open-api.vn/api`,
   headers: {
     'Access-Control-Allow-Origin': '*',
   },

@@ -1,10 +1,13 @@
 import React, { PropsWithChildren } from 'react'
-import { Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Modal, Platform, Pressable, StyleSheet, View } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+
+import { tw } from '@/lib/tailwind'
 
 const styles = StyleSheet.create({
   cardMain: {
-    position: 'absolute',
-    top: 100,
+    position: 'relative',
+    top: 200,
     width: 327,
     alignSelf: 'center',
     zIndex: 1000,
@@ -67,8 +70,13 @@ export const Task = ({
       >
         <View style={styles.cardMain}>
           <View style={styles.card}>{children}</View>
-          <Pressable style={styles.btnContainer} onPress={() => setModalVisible(false)}>
-            <Text style={styles.textContainer}>Cancel</Text>
+          <Pressable
+            style={tw(
+              'absolute -top-3 -right-3 bg-black rounded-full w-12 h-12 flex items-center justify-center'
+            )}
+            onPress={() => setModalVisible(false)}
+          >
+            <Icon name={'close'} size={25} color="white" />
           </Pressable>
         </View>
       </View>
