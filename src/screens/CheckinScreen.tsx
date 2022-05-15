@@ -81,28 +81,45 @@ export const CheckinScreen = () => {
   if (!checkedin && rate == null && progress == null)
     return <ActivityIndicator size="small" color="#0000ff" />
   // console.log(rate)
+  // console.log(new Date().getHours())
   return (
     <View style={tw('z-0 h-full relative bg-gray-200 px-6 py-6')}>
       <View style={tw('z-0 bg-white relative h-100 w-90 rounded-3xl')}>
-        {checkedin?.checkedIn == false && checkedin.timeOut == null && (
+        {checkedin?.checkedIn == false && checkedin.timeOut == null && new Date().getHours() < 9 && (
           <>
-            <Text style={tw(' absolute right-33 top-28 text-xl')}>You haven't</Text>
-            <Text style={tw(' absolute right-28 top-35 text-xl')}>checked in yet !</Text>
-            <TouchableOpacity
-              style={tw(
-                'items-center justify-center absolute mt-2 z-40 bg-green-500 right-31 bottom-43 h-10 w-28 rounded-lg'
-              )}
-              onPress={() => {
-                navigation.navigate('BottomTabs', {
-                  screen: 'CheckinMethod',
-                  params: { userId: currentUser?.id as number, deviceId: '' },
-                })
-              }}
-            >
-              <Text style={tw('text-lg text-white')}>CHECKIN</Text>
-            </TouchableOpacity>
+            <Text style={tw(' absolute right-36 top-28 text-xl text-yellow-500')}>Your Shift</Text>
+            <Text style={tw(' absolute right-30 top-35 text-xl text-yellow-500')}>Hasn't Started!</Text>
           </>
         )}
+        {checkedin?.checkedIn == false && checkedin.timeOut == null && new Date().getHours() > 18 && (
+          <>
+            <Text style={tw(' absolute right-36 top-28 text-xl text-red-300')}>Your Shift</Text>
+            <Text style={tw(' absolute right-33 top-35 text-xl text-red-300')}>Is Over!</Text>
+          </>
+        )}
+
+        {checkedin?.checkedIn == false &&
+          checkedin.timeOut == null &&
+          new Date().getHours() >= 9 &&
+          new Date().getHours() <= 18 && (
+            <>
+              <Text style={tw(' absolute right-33 top-28 text-xl')}>You haven't</Text>
+              <Text style={tw(' absolute right-28 top-35 text-xl')}>checked in yet !</Text>
+              <TouchableOpacity
+                style={tw(
+                  'items-center justify-center absolute mt-2 z-40 bg-green-500 right-31 bottom-43 h-10 w-28 rounded-lg'
+                )}
+                onPress={() => {
+                  navigation.navigate('BottomTabs', {
+                    screen: 'CheckinMethod',
+                    params: { userId: currentUser?.id as number, deviceId: '' },
+                  })
+                }}
+              >
+                <Text style={tw('text-lg text-white')}>CHECKIN</Text>
+              </TouchableOpacity>
+            </>
+          )}
         {checkedin?.checkedIn == true && checkedin.timeOut == null && (
           <>
             <View>

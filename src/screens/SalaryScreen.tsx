@@ -21,8 +21,8 @@ export const SalaryScreen = () => {
   const showPicker = useCallback((value) => setShow(value), [])
   const dateNow = new Date()
   const maxDayLastMonth = format(
-    new Date(dateNow.getFullYear(), dateNow.getMonth() + 1, 0),
-    'yyyy-MM-DD'
+    new Date(dateNow.getFullYear(), dateNow.getMonth(), 0),
+    'yyyy-MM-dd'
   )
   return (
     <View style={tw('flex flex-1 bg-gray-200')}>
@@ -57,7 +57,7 @@ export const SalaryScreen = () => {
             setDate(words[1] + '-' + words[0])
             showPicker(false)
           }}
-          selected={date}
+          selected={maxDayLastMonth}
           maximumDate={maxDayLastMonth}
           selectorStartingYear={2000}
           minuteInterval={30}

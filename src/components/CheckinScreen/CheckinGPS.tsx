@@ -13,14 +13,21 @@ import IconFoundation from 'react-native-vector-icons/Foundation'
 import { useNavigation } from '@react-navigation/native'
 // import DeviceInfo from 'react-native-device-info'
 
+import { useQueryClient } from 'react-query'
+
 import { tw } from '@/lib/tailwind'
 import CompanyIcon from '@/assets/images/company_pin.png'
 import { useCheckin_inRequest } from '@/state/checkin-mutation'
 import { useCurrentUser } from '@/state/auth-queries'
+import { useCoordinate } from '@/state/coordinate-queries'
+import { LOCATIONS } from '@/state/query-keys'
 
 export const CheckinGPS = () => {
   // const geolocation = new Geolocation()
+  const queryClient = useQueryClient()
   const { currentUser } = useCurrentUser()
+  const { coordinates } = useCoordinate()
+  console.log(coordinates)
   const check_inInput = {
     userId: currentUser?.id as number,
     deviceId: Device.deviceName as string,
@@ -29,8 +36,9 @@ export const CheckinGPS = () => {
   }
   const [refresh, setRefresh] = useState(false)
   const onPress = () => setRefresh(!refresh)
-  const company_latitude = 10.78697
-  const company_longtitude = 106.67218
+  const company_latitude = coordinates?.latitude as number
+  const company_longtitude = coordinates?.longitude as number
+  // console.log("longitude: "+company_longtitude)
   // const company_latitude = 13.78697
   // const company_longtitude = 99.67218
   const { width, height } = Dimensions.get('window')
@@ -84,6 +92,7 @@ export const CheckinGPS = () => {
     getLocationAsync()
   }, [])
   useEffect(() => {
+    queryClient.refetchQueries([LOCATIONS])
     getLocationAsync()
   }, [refresh])
   // getDistance(
