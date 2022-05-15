@@ -91,7 +91,7 @@ export const CheckinScreen = () => {
             <Text style={tw(' absolute right-30 top-35 text-xl text-yellow-500')}>Hasn't Started!</Text>
           </>
         )}
-        {checkedin?.checkedIn == false && checkedin.timeOut == null && new Date().getHours() > 18 && (
+        {checkedin?.checkedIn == false && checkedin.timeOut == null && new Date().getHours() > 19 && (
           <>
             <Text style={tw(' absolute right-36 top-28 text-xl text-red-300')}>Your Shift</Text>
             <Text style={tw(' absolute right-33 top-35 text-xl text-red-300')}>Is Over!</Text>
@@ -101,7 +101,7 @@ export const CheckinScreen = () => {
         {checkedin?.checkedIn == false &&
           checkedin.timeOut == null &&
           new Date().getHours() >= 9 &&
-          new Date().getHours() <= 18 && (
+          new Date().getHours() <= 19 && (
             <>
               <Text style={tw(' absolute right-33 top-28 text-xl')}>You haven't</Text>
               <Text style={tw(' absolute right-28 top-35 text-xl')}>checked in yet !</Text>
