@@ -5,6 +5,11 @@ export type Todo = {
   time: string
 }
 export type TodoParams = {
+  userId?: number
   toDateTime: string
-  fromDateTIme: string
+  fromDateTime: string
+}
+export type TodoUpdateInputParams = Todo
+export type TodoPostInputParams = Omit<Todo, 'id'> & {
+  userId: number
 }

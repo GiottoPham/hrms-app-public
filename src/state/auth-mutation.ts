@@ -10,10 +10,10 @@ export const useLogin = () => {
 
   const { mutateAsync, ...rest } = useMutation({
     mutationFn: login,
-    onSuccess: (auth) => {
+    onSuccess: async (auth) => {
       queryClient.setQueryData<Auth>(AUTH, auth)
-      SecureStore.setItemAsync('token', auth.token)
-      SecureStore.setItemAsync('id', auth.id.toString())
+      await SecureStore.setItemAsync('token', auth.token)
+      await SecureStore.setItemAsync('id', auth.id.toString())
     },
   })
 

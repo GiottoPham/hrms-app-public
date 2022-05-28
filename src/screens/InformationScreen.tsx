@@ -11,8 +11,10 @@ import { Insurance } from '@/components/InformationScreen/insurance'
 import { JobSalary } from '@/components/InformationScreen/jobSalary'
 import { useEmployee } from '@/state/employee-queries'
 import { useJobs } from '@/state/job-queries'
+import { useCurrentUser } from '@/state/auth-queries'
 export const InformationScreen = () => {
-  const { employee, isLoading } = useEmployee(17)
+  const { currentUser } = useCurrentUser()
+  const { employee, isLoading } = useEmployee(currentUser?.eid as number)
   const { jobDetail } = useJobs(employee?.jobDetail.jobId as number)
   const [basic, setBasic] = useState(false)
   const [job, setJob] = useState(false)
@@ -37,14 +39,13 @@ export const InformationScreen = () => {
   }, [])
   if (isLoading || !jobDetail || !employee) return null
   // eslint-disable-next-line no-console
-  console.log('emp', employee)
   return (
     <View style={tw('flex flex-1 bg-gray-200')}>
       <ImageBackground
         source={require('@/assets/images/bg-profile.jpg')}
         resizeMode="stretch"
         blurRadius={3}
-        style={tw('h-70 w-full flex justify-center items-center')}
+        style={tw('h-57 w-full flex justify-center items-center')}
       >
         <View style={tw('justify-evenly items-center flex-row')}>
           <Avatar
@@ -55,7 +56,7 @@ export const InformationScreen = () => {
             }}
             title={'Nguyen'}
             avatarStyle={tw('border-2 border-yellow-600')}
-            containerStyle={tw('mt-15')}
+            containerStyle={tw('mt-5')}
           />
         </View>
         <Text style={tw('text-white mt-2 font-nunito-bold text-xl')}>

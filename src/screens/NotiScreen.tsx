@@ -31,6 +31,7 @@ import { Task } from '@/components/NotiSccreen/Task'
 import { tw } from '@/lib/tailwind'
 import { useTodoParams } from '@/state/todo-params'
 import { useTodos } from '@/state/todos-queries'
+import { useUpdateTodo } from '@/state/todo-mutation'
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -184,21 +185,8 @@ export const NotiScreen = ({
   }, [])
   //************* */
   const { todoParams, setTodoParams } = useTodoParams()
-  const {
-    todos = [
-      {
-        id: 1,
-        title: 'Task 1',
-        notes: 'Everybody has a meeting',
-        time: '2022-05-09T09:00:00.000Z',
-      },
-      { id: 2, title: 'Task 2', notes: 'Deadline of function 1', time: '2022-05-09T10:00:00.000Z' },
-      { id: 3, title: 'Task 3', notes: 'End Project Party', time: '2022-05-09T11:00:00.000Z' },
-      { id: 4, title: 'Task 4', notes: 'Deadline of function 2', time: '2022-05-10T12:00:00.000Z' },
-      { id: 5, title: 'Task 5', notes: 'End Sprint meeting', time: '2022-05-11T09:00:00.000Z' },
-      { id: 6, title: 'Task 6', notes: 'Knowledge Training', time: '2022-05-12T07:00:00.000Z' },
-    ],
-  } = useTodos(todoParams)
+  console.log(todoParams)
+  const { todos = [] } = useTodos(todoParams)
   const [currentDate, setCurrentDate] = useState<moment.Moment>(moment(new Date()))
   const [isModalVisible, setModalVisible] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Todo>()
@@ -264,6 +252,8 @@ export const NotiScreen = ({
 
     return calendarId
   }
+  const { updateTodo } = useUpdateTodo()
+  console.log(todos)
   return (
     <Fragment>
       {selectedTask !== null && (
@@ -363,6 +353,12 @@ export const NotiScreen = ({
               <TouchableOpacity
                 onPress={async () => {
                   handleModalVisible()
+                  updateTodo({
+                    id: selectedTask?.id as number,
+                    title: selectedTask?.title || '',
+                    notes: selectedTask?.notes || '',
+                    time: new Date(selectedTask?.time as string).toISOString(),
+                  })
                 }}
                 style={styles.updateButton}
               >
@@ -400,7 +396,7 @@ export const NotiScreen = ({
           highlightDateNameStyle={{ color: 'white' }}
           disabledDateNameStyle={{ color: 'grey' }}
           datesWhitelist={[
-            { start: moment(todoParams.fromDateTIme), end: moment(todoParams.toDateTime) },
+            { start: moment(todoParams.fromDateTime), end: moment(todoParams.toDateTime) },
           ]}
           iconContainer={{ flex: 0.1 }}
           markedDates={todos.map((todo) => ({
@@ -440,7 +436,7 @@ export const NotiScreen = ({
         >
           <ScrollView
             contentContainerStyle={{
-              paddingBottom: 20,
+              paddingBottom: 200,
             }}
           >
             {todos
@@ -551,7 +547,6 @@ async function registerForPushNotificationsAsync() {
       return
     }
     token = (await Notifications.getExpoPushTokenAsync()).data
-    console.log(token)
   } else {
     alert('Must use physical device for Push Notifications')
   }

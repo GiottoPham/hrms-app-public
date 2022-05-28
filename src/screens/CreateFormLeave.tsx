@@ -68,24 +68,17 @@ export const CreateFormLeave = () => {
     if (amount == 0) newAmount = Number(1 / 2)
     else if (amount == 1) newAmount = 1
     else newAmount = differenceInDays(dateAvailable2, dateAvailable)
-    console.log(leaveReq)
-    if (leaveReq.toDate == '')
+    console.log({ ...leaveReq, amount: newAmount, toDate: leaveReq.fromDate })
+    if (leaveReq.toDate == '') {
+      console.log({ ...leaveReq, amount: newAmount, toDate: leaveReq.fromDate })
       sendLeaveRequest({ ...leaveReq, amount: newAmount, toDate: leaveReq.fromDate })
-    else sendLeaveRequest({ ...leaveReq, amount: newAmount })
+        .then(() => alert('Your request has been sent!'))
+        .catch(() => alert('Failed!'))
+    } else
+      sendLeaveRequest({ ...leaveReq, amount: newAmount })
+        .then(() => alert('Your request has been sent!'))
+        .catch(() => alert('Failed!'))
   }
-  // const [keyboardHeight, setKeyboardHeight] = useState(0)
-  // function onKeyboardDidShow(e: KeyboardEvent) {
-  //   // Remove type here if not using TypeScript
-  //   setKeyboardHeight(e.endCoordinates.height)
-  // }
-
-  // function onKeyboardDidHide() {
-  //   setKeyboardHeight(0)
-  // }
-
-  // useEffect(() => {
-
-  // }, [])
 
   return (
     <KeyboardAwareScrollView style={tw('bg-gray-200')}>
@@ -175,7 +168,7 @@ export const CreateFormLeave = () => {
             </View>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
-              textColor="#444444"
+              textColor="#FFBE55"
               date={dateAvailable}
               mode="date"
               onConfirm={handleConfirm}
@@ -204,7 +197,7 @@ export const CreateFormLeave = () => {
             </View>
             <DateTimePickerModal
               isVisible={isDatePickerVisible2}
-              textColor="#444444"
+              textColor="#FFBE55"
               date={dateAvailable2}
               mode="date"
               onConfirm={handleConfirm2}

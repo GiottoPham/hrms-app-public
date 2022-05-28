@@ -7,7 +7,14 @@ import Popover from 'react-native-popover-view'
 
 import { tw } from '@/lib/tailwind'
 export const SalaryScreen = () => {
-  const [date, setDate] = useState(format(new Date(), 'MM-yyyy'))
+  const dateNow = new Date()
+
+  const maxDayLastMonth = format(
+    new Date(dateNow.getFullYear(), dateNow.getMonth(), 0),
+    'yyyy-MM-dd'
+  )
+  const [date, setDate] = useState(format(new Date(maxDayLastMonth), 'MM-yyyy'))
+  const [dateFind, setDateFind] = useState(new Date(maxDayLastMonth))
   const [show, setShow] = useState(false)
   const [showBasicInfo, setShowBasicInfo] = useState(false)
   const [showMonthlyInfo, setShowMonthlyInfo] = useState(false)
@@ -19,11 +26,7 @@ export const SalaryScreen = () => {
   const [showPIT, setShowPIT] = useState(false)
 
   const showPicker = useCallback((value) => setShow(value), [])
-  const dateNow = new Date()
-  const maxDayLastMonth = format(
-    new Date(dateNow.getFullYear(), dateNow.getMonth(), 0),
-    'yyyy-MM-dd'
-  )
+  console.log(dateFind)
   return (
     <View style={tw('flex flex-1 bg-gray-200')}>
       <View style={tw('h-20 flex items-center justify-center')}>
@@ -55,11 +58,11 @@ export const SalaryScreen = () => {
           onMonthYearChange={(selectedDate: string) => {
             const words = selectedDate.split(' ')
             setDate(words[1] + '-' + words[0])
+            setDateFind(new Date(Number(words[0]), Number(words[1]), 0))
             showPicker(false)
           }}
-          selected={maxDayLastMonth}
           maximumDate={maxDayLastMonth}
-          selectorStartingYear={2000}
+          selectorStartingYear={2022}
           minuteInterval={30}
         />
       )}
@@ -92,7 +95,12 @@ export const SalaryScreen = () => {
                 <View style={tw('flex-row justify-between w-40')}>
                   <Text style={tw('text-yellow-600 font-nunito-bold text-base')}> (1) </Text>
 
-                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>12 000 000</Text>
+                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>
+                    {(12000000).toLocaleString('vi', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </Text>
                 </View>
               </View>
               <View
@@ -191,7 +199,12 @@ export const SalaryScreen = () => {
                 <Text style={tw('text-white font-nunito-bold text-base')}>
                   I. Total derived Income
                 </Text>
-                <Text style={tw('text-white font-nunito-bold text-base')}>14 000 000</Text>
+                <Text style={tw('text-white font-nunito-bold text-base')}>
+                  {(14000000).toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
               </TouchableOpacity>
             }
           >
@@ -209,7 +222,12 @@ export const SalaryScreen = () => {
                 )}
               >
                 <Text style={tw('text-white font-nunito-bold text-base')}>A. Derived Salary</Text>
-                <Text style={tw('text-white font-nunito-bold text-base')}>12 000 000</Text>
+                <Text style={tw('text-white font-nunito-bold text-base')}>
+                  {(12000000).toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
               </TouchableOpacity>
             }
           >
@@ -225,7 +243,12 @@ export const SalaryScreen = () => {
           >
             <Text style={tw('text-white font-nunito-bold text-base')}>B. Another Income</Text>
             <View style={tw('flex-row justify-between w-25 items-center')}>
-              <Text style={tw('text-white font-nunito-bold text-base')}>2 000 000</Text>
+              <Text style={tw('text-white font-nunito-bold text-base')}>
+                {(2000000).toLocaleString('vi', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
+              </Text>
               {anotherIncome && <Icon name="caret-up" size={30} color="#FFBE55" />}
               {!anotherIncome && <Icon name="caret-down" size={30} color="#FFBE55" />}
             </View>
@@ -239,7 +262,12 @@ export const SalaryScreen = () => {
               >
                 <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>Lunch</Text>
 
-                <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>1 000 000</Text>
+                <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>
+                  {(1000000).toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
               </View>
               <View
                 style={tw(
@@ -248,7 +276,12 @@ export const SalaryScreen = () => {
               >
                 <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>Parking</Text>
 
-                <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>1 000 000</Text>
+                <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>
+                  {(1000000).toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
               </View>
             </>
           )}
@@ -264,7 +297,12 @@ export const SalaryScreen = () => {
                 )}
               >
                 <Text style={tw('text-white font-nunito-bold text-base')}>II. Total Deduction</Text>
-                <Text style={tw('text-white font-nunito-bold text-base')}>1 750 000</Text>
+                <Text style={tw('text-white font-nunito-bold text-base')}>
+                  {(1750000).toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
               </TouchableOpacity>
             }
           >
@@ -284,7 +322,12 @@ export const SalaryScreen = () => {
                 <Text style={tw('text-white font-nunito-bold text-base')}>
                   A. Mandatory Insurance
                 </Text>
-                <Text style={tw('text-white font-nunito-bold text-base')}>1 470 000</Text>
+                <Text style={tw('text-white font-nunito-bold text-base')}>
+                  {(1470000).toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
               </TouchableOpacity>
             }
           >
@@ -300,7 +343,12 @@ export const SalaryScreen = () => {
           >
             <Text style={tw('text-white font-nunito-bold text-base')}>B. Personal Income Tax</Text>
             <View style={tw('flex-row justify-between w-25 items-center')}>
-              <Text style={tw('text-white font-nunito-bold text-base')}>80 000</Text>
+              <Text style={tw('text-white font-nunito-bold text-base')}>
+                {(80000).toLocaleString('vi', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
+              </Text>
               {showPIT && <Icon name="caret-up" size={30} color="#FFBE55" />}
               {!showPIT && <Icon name="caret-down" size={30} color="#FFBE55" />}
             </View>
@@ -317,7 +365,12 @@ export const SalaryScreen = () => {
                 </Text>
                 <View style={tw('flex-row justify-between w-40')}>
                   <Text style={tw('text-yellow-600 font-nunito-bold text-base')}> (8) </Text>
-                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>730 000</Text>
+                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>
+                    {(730000).toLocaleString('vi', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </Text>
                 </View>
               </View>
               <View
@@ -330,7 +383,12 @@ export const SalaryScreen = () => {
                 </Text>
                 <View style={tw('flex-row justify-between w-40')}>
                   <Text style={tw('text-yellow-600 font-nunito-bold text-base')}> (9) </Text>
-                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>11 000 000</Text>
+                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>
+                    {(11000000).toLocaleString('vi', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </Text>
                 </View>
               </View>
               <View
@@ -343,7 +401,12 @@ export const SalaryScreen = () => {
                 </Text>
                 <View style={tw('flex-row justify-between w-40')}>
                   <Text style={tw('text-yellow-600 font-nunito-bold text-base')}> (10) </Text>
-                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>0</Text>
+                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>
+                    {(0).toLocaleString('vi', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </Text>
                 </View>
               </View>
               <View
@@ -354,7 +417,12 @@ export const SalaryScreen = () => {
                   <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>
                     (I)-(II.A)-(8)-(9)-(10)
                   </Text>
-                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>800,000</Text>
+                  <Text style={tw('text-yellow-600 font-nunito-bold text-base')}>
+                    {(800000).toLocaleString('vi', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </Text>
                 </View>
               </View>
             </>
@@ -365,7 +433,11 @@ export const SalaryScreen = () => {
             )}
           >
             <Text style={tw('text-yellow-600 font-nunito-bold text-lg')}>
-              Net Income: 12 450 000
+              Net Income:{' '}
+              {(12450000).toLocaleString('vi', {
+                style: 'currency',
+                currency: 'VND',
+              })}
             </Text>
           </View>
         </View>

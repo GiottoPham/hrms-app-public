@@ -33,10 +33,7 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 export const BottomTabNavigator = () => {
   const { currentUser } = useCurrentUser()
-  const { employee } = useEmployee(currentUser?.id as number)
-  // console.log(currentUser?.id)
-  // console.log(employee)
-  // if (!employee) return null
+  const { employee } = useEmployee(currentUser?.eid as number)
   return (
     <BottomTab.Navigator
       initialRouteName="CheckinBottom"
@@ -130,7 +127,9 @@ export const BottomTabNavigator = () => {
                           size={32}
                           rounded
                           source={{
-                            uri: employee?.personalDetail.avatar,
+                            uri: !employee
+                              ? 'https://png2.cleanpng.com/sh/c19eebe8d9f5306b216767f15eff595b/L0KzQYm3VsI0N6t1hJH0aYP2gLBuTfNwdaF6jNd7LXnmf7B6TfF3aaVmip98b3Pscb20jfVlcZIyet54Zz3pf7B7TfF4baR0RdNBYYTkgn7wgB9vNWZnStcEOXO3RIGCVsI0NmU7TKUEMUi0QYa5Wcc5OGc8TqQBNEaxgLBu/kisspng-computer-icons-avatar-social-media-blog-font-aweso-avatar-icon-5b2e99c4409623.4643918115297806762646.png'
+                              : employee.personalDetail.avatar,
                           }}
                           title={'N'}
                         />

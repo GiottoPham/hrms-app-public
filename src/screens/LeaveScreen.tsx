@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, RefreshControl, ScrollView } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { format } from 'date-fns'
@@ -15,10 +15,16 @@ import { LeaveAccept } from '../components/LeaveScreen/LeaveAgree'
 import { LeaveIgnore } from '../components/LeaveScreen/LeaveIgnore'
 import { LeavePending } from '../components/LeaveScreen/LeavePending'
 import { AddButton } from '../components/LeaveScreen/AddButton'
+import { useQueryClient } from 'react-query'
+import { LEAVE } from '@/state/query-keys'
 // import Icon from 'react-native-vector-icons/FontAwesome5'
 
 const Tab = createMaterialTopTabNavigator()
 export const LeaveScreen = () => {
+  const wait = (timeout: number) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout))
+  }
+
   const leaveTypeList: Record<LeaveTypeNum, LeaveType> = {
     0: LeaveType.Unpaid,
     1: LeaveType.Paid,
@@ -61,9 +67,8 @@ export const LeaveScreen = () => {
         reason: item.reason,
         applicationDate: item.applicationDate,
       }
-      if (
-        format(new Date(obj.applicationDate), 'dd-MM-yyyy') === format(dateAvailable, 'dd-MM-yyyy')
-      ) {
+      const applicationDate = new Date(obj.applicationDate)
+      if (format(applicationDate, 'dd-MM-yyyy') === format(dateAvailable, 'dd-MM-yyyy')) {
         if (item.status == 0) listAgreeEffect.push(obj)
         else if (item.status == 1) listIgnoreEffect.push(obj)
         else listPendingEffect.push(obj)
@@ -74,6 +79,8 @@ export const LeaveScreen = () => {
     setListAgree(listAgreeEffect)
   }, [leaves, dateAvailable])
   return (
+    // <ScrollView
+    //     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
     <View style={tw('flex flex-1 bg-gray-200')}>
       {!add && (
         <View style={tw('flex flex-1 bg-gray-200')}>
@@ -95,7 +102,7 @@ export const LeaveScreen = () => {
 
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
-            textColor="#444444"
+            textColor="#FFBE55"
             date={dateAvailable}
             mode="date"
             onConfirm={handleConfirm}
@@ -138,6 +145,7 @@ export const LeaveScreen = () => {
         </View>
       )}
     </View>
+    // </ScrollView>
   )
 }
 // const styles = StyleSheet.create({

@@ -1,3 +1,5 @@
+import type { UserInputParams } from './user'
+
 export type Employee = {
   id: number
   personalDetail: Omit<PersonalDetailInputParams, 'avatar'> & {
@@ -20,7 +22,7 @@ export type JobDetailInputParams = {
   joinDate: string
   jobId: number
   pit: string
-  unitId: number
+  departmentId: number
   salaryGroup: number
   salary: string
   bonus: Bonus[]
@@ -38,16 +40,25 @@ export type Bonus = {
 
 export type InsuranceInputParams = {
   id: number
-  health: InsuranceCommon & {
-    cityId: number
-    kcbId: number
-  }
+  cityId: number
+  kcbId: number
+  health: InsuranceCommon
   social: InsuranceCommon
   unemployment: InsuranceCommon
 }
 export type InsuranceCommon = {
   number: string
-  issueDate: string
-  toDate: string
-  fromDate: string
+  issue_date: string
+  to_date: string
+  from_date: string
+}
+export type EmployeeParams = {
+  jobDetail: JobDetailInputParams
+  personalDetail: PersonalDetailInputParams
+  accountDetail: AssignAccountInputParams
+}
+export type AssignAccountInputParams = {
+  type: 'available' | 'new'
+  id: number | null
+  newAccount: UserInputParams | null
 }

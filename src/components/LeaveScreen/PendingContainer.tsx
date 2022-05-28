@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 
 import { tw } from '@/lib/tailwind'
 export const PendingComponent = ({ leave }: { leave: LeaveParse }) => {
-  const apply = format(new Date(leave.applicationDate), 'dd-MM-yyyy h:mm a')
+  const apply = format(new Date(leave.applicationDate), 'dd-MM-yyyy')
 
   return (
     <TouchableOpacity

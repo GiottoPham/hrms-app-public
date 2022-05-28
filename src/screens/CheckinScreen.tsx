@@ -27,28 +27,36 @@ export const CheckinScreen = () => {
   const [timeLapse, setTimeLapse] = useState('00 hours 00 minutes')
   // const rate = (new Date(timeNow).getTime() - new Date(timeIn).getTime()) / (8 * 60 * 60 * 1000)
   useEffect(() => {
-    const timer = setInterval(() => {
-      const lapse = intervalToDuration({
-        start: checkedin == null ? new Date() : new Date(checkedin.timeIn),
-        end: new Date(),
-      })
-      const { hours, minutes, seconds } = lapse
-      setTimeLapse(`${hours} hrs ${minutes} mins ${seconds} secs`)
-    }, 1000)
-    return () => {
-      clearInterval(timer) // Return a funtion to clear the timer so that it will stop being called on unmount
+    if (checkedin != null && checkedin.timeIn != null) {
+      let newRate = 0
+      const timer = setInterval(() => {
+        const lapse = intervalToDuration({
+          start: checkedin == null ? new Date() : new Date(checkedin.timeIn),
+          end: new Date(),
+        })
+        const { hours, minutes, seconds } = lapse
+        setTimeLapse(`${hours} hrs ${minutes} mins ${seconds} secs`)
+        newRate =
+          checkedin?.timeIn == null
+            ? 0
+            : (new Date().getTime() - new Date(checkedin.timeIn).getTime()) / (8 * 60 * 60 * 1000)
+        progress.value = withTiming(newRate, { duration: 2000 })
+      }, 1000)
+      if (newRate == 1 || (checkedin.timeIn != null && checkedin.timeOut != null)) {
+        clearInterval(timer) // Return a funtion to clear the timer so that it will stop being called on unmount
+      }
     }
   }, [checkedin])
   useEffect(() => {
-    if (checkedin) {
-      if (checkedin.checkedIn == true) {
-        const newRate =
-          (new Date().getTime() - new Date(checkedin.timeIn).getTime()) / (8 * 60 * 60 * 1000)
-        setRate(newRate)
-        progress.value = withTiming(newRate, { duration: 2000 })
-        // console.log('this is rate:' + newRate)
-      }
-    }
+    // if (checkedin) {
+    //   if (checkedin.checkedIn == true) {
+    //     const newRate =
+    //       (new Date().getTime() - new Date(checkedin.timeIn).getTime()) / (8 * 60 * 60 * 1000)
+    //     setRate(newRate)
+    //     progress.value = withTiming(newRate, { duration: 2000 })
+    //     // console.log('this is rate:' + newRate)
+    //   }
+    // }
   }, [checkedin])
   const check_outInput = {
     userId: currentUser?.id as number,
@@ -58,11 +66,12 @@ export const CheckinScreen = () => {
   }
   const { sendCheckin_outRequest } = useCheckin_outRequest()
   const handleCheckout = () => {
-    sendCheckin_outRequest(check_outInput)
-    // navigation.navigate('BottomTabs', {
-    //   screen: 'CheckinBottom',
-    //   params: { isChecking: true },
-    // })
+    console.log(check_outInput)
+    navigation.navigate('BottomTabs', {
+      screen: 'CheckinMethod',
+      params: { userId: currentUser?.id as number, deviceId: '' },
+    })
+    // sendCheckin_outRequest(check_outInput)
   }
   // useEffect(() => {
   //   const timeNow = '2022-03-08T06:10:38.468Z'
@@ -85,26 +94,44 @@ export const CheckinScreen = () => {
   return (
     <View style={tw('z-0 h-full relative bg-gray-200 px-6 py-6')}>
       <View style={tw('z-0 bg-white relative h-100 w-90 rounded-3xl')}>
-        {checkedin?.checkedIn == false && checkedin.timeOut == null && new Date().getHours() < 9 && (
+        {/* {checkedin?.checkedIn == false && checkedin.timeOut == null && new Date().getHours() < 8 && (
           <>
-            <Text style={tw(' absolute right-36 top-28 text-xl text-yellow-500')}>Your Shift</Text>
-            <Text style={tw(' absolute right-30 top-35 text-xl text-yellow-500')}>Hasn't Started!</Text>
+            <Text style={tw(' absolute w-full text-center top-30 text-xl text-yellow-500')}>
+              Your Shift
+            </Text>
+            <Text style={tw(' absolute w-full text-center top-35 text-xl text-yellow-500')}>
+              Hasn't Started!
+            </Text>
           </>
-        )}
-        {checkedin?.checkedIn == false && checkedin.timeOut == null && new Date().getHours() > 19 && (
+        )} */}
+        {checkedin?.checkedIn == false && checkedin.timeOut == null && new Date().getHours() > 24 && (
           <>
-            <Text style={tw(' absolute right-36 top-28 text-xl text-red-300')}>Your Shift</Text>
-            <Text style={tw(' absolute right-33 top-35 text-xl text-red-300')}>Is Over!</Text>
+            <Text
+              style={tw(
+                ' absolute w-full text-center top-32 text-xl text-red-500 font-nunito-bold'
+              )}
+            >
+              Your Shift
+            </Text>
+            <Text
+              style={tw(
+                ' absolute text-center w-full top-37 text-xl text-red-500 font-nunito-bold'
+              )}
+            >
+              Is Over!
+            </Text>
           </>
         )}
 
         {checkedin?.checkedIn == false &&
           checkedin.timeOut == null &&
-          new Date().getHours() >= 9 &&
-          new Date().getHours() <= 19 && (
+          new Date().getHours() >= 0 &&
+          new Date().getHours() <= 24 && (
             <>
-              <Text style={tw(' absolute right-33 top-28 text-xl')}>You haven't</Text>
-              <Text style={tw(' absolute right-28 top-35 text-xl')}>checked in yet !</Text>
+              <Text style={tw(' absolute text-center w-full top-28 text-xl')}>You haven't</Text>
+              <Text style={tw(' absolute text-center w-full top-35 text-xl')}>
+                checked in yet !
+              </Text>
               <TouchableOpacity
                 style={tw(
                   'items-center justify-center absolute mt-2 z-40 bg-green-500 right-31 bottom-43 h-10 w-28 rounded-lg'
@@ -142,8 +169,12 @@ export const CheckinScreen = () => {
         )}
         {checkedin?.checkedIn == true && checkedin.timeOut != null && (
           <>
-            <Text style={tw(' absolute right-36 top-28 text-xl')}>You finished</Text>
-            <Text style={tw(' absolute right-33 top-35 text-xl')}>your shift !</Text>
+            <Text style={tw(' absolute right-33 top-34 text-xl font-nunito-bold text-blue-300')}>
+              You finished
+            </Text>
+            <Text style={tw(' absolute right-33 top-39 text-xl font-nunito-bold text-blue-300')}>
+              your shift !
+            </Text>
           </>
         )}
 

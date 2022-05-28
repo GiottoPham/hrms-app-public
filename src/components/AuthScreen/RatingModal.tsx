@@ -1,18 +1,15 @@
 import React, { PropsWithChildren } from 'react'
-import { Modal, Platform, Pressable, StyleSheet, View } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialIcons'
-
-import { tw } from '@/lib/tailwind'
+import { Modal, Platform, Pressable, StyleSheet, View, Text } from 'react-native'
 
 const styles = StyleSheet.create({
   cardMain: {
     position: 'relative',
-    top: 200,
     width: 327,
     alignSelf: 'center',
     zIndex: 1000,
     elevation: 1000,
-    paddingBottom: 54,
+    height: '100%',
+    justifyContent: 'flex-end',
   },
   card: {
     width: 327,
@@ -44,7 +41,7 @@ type TaskProps = {
   isModalVisible: boolean
   setModalVisible: (visible: boolean) => void
 }
-export const Task = ({
+export const RatingModal = ({
   isModalVisible,
   children,
   setModalVisible,
@@ -70,13 +67,8 @@ export const Task = ({
       >
         <View style={styles.cardMain}>
           <View style={styles.card}>{children}</View>
-          <Pressable
-            style={tw(
-              'absolute -top-3 -right-3 bg-black rounded-full w-12 h-12 flex items-center justify-center'
-            )}
-            onPress={() => setModalVisible(false)}
-          >
-            <Icon name={'close'} size={25} color="white" />
+          <Pressable onPress={() => setModalVisible(false)}>
+            <Text>Ask me later</Text>
           </Pressable>
         </View>
       </View>

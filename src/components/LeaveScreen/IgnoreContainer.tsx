@@ -6,8 +6,8 @@ import { format } from 'date-fns'
 
 import { tw } from '@/lib/tailwind'
 export const IgnoreComponent = ({ leave }: { leave: LeaveParse }) => {
-  const apply = format(new Date(leave.applicationDate), 'dd-MM-yyyy h:mm a')
-
+  const apply = format(new Date(leave.applicationDate), 'dd-MM-yyyy')
+  const amount = leave.amount < 0 ? 1 : leave.amount == 0 ? 0.5 : leave.amount
   return (
     <TouchableOpacity
       style={tw(
@@ -18,12 +18,9 @@ export const IgnoreComponent = ({ leave }: { leave: LeaveParse }) => {
 
       <View style={tw('flex flex-col items-start w-55')}>
         <Text style={tw('font-nunito text-lg')}>{leave.leaveType}</Text>
-        <Text style={tw('font-nunito mt-2')}>
-          {' '}
-          Số ngày: {leave.amount == 0 ? 0.5 : leave.amount}
-        </Text>
+        <Text style={tw('font-nunito mt-2')}> Số ngày: {amount}</Text>
         <Text style={tw('font-nunito mt-1')}>
-          Thời gian: {leave.fromDate} - {leave.toDate}
+          Thời gian: {leave.fromDate} - {leave.fromDate}
         </Text>
       </View>
 

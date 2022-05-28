@@ -9,23 +9,23 @@ import { BarCodeEvent, BarCodeScanner } from 'expo-barcode-scanner'
 import { Text, StyleSheet, Button, View, TouchableOpacity, Linking } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { format } from 'date-fns'
+import * as SecureStore from 'expo-secure-store'
+import md5 from 'md5'
 
 import { tw } from '@/lib/tailwind'
-import { useCheckin_inRequest } from '@/state/checkin-mutation'
+import { useCheckin_inRequest, useCheckin_outRequest } from '@/state/checkin-mutation'
 import { useCurrentUser } from '@/state/auth-queries'
-
+import { useHaveCheckedin } from '@/state/checkin-queries'
 export const CheckinQR = ({
   navigation,
 }: {
   navigation: MaterialTopTabScreenProps<CheckinTabProps, 'CheckinQR'>
 }) => {
+  const navigate = useNavigation<StackNavigationProp<RootStackParamList>>()
+
   const { currentUser } = useCurrentUser()
-  const check_inInput = {
-    userId: currentUser?.id as number,
-    deviceId: Device.deviceName as string,
-    date: new Date().toISOString(),
-    timeIn: format(new Date(), 'HH:mm:ss'),
-  }
+  const { checkedin } = useHaveCheckedin(currentUser?.id as number)
+  const { sendCheckin_outRequest } = useCheckin_outRequest()
   const [hasPermission, setHasPermission] = useState(false)
   const [scanned, setScanned] = useState(false)
   const [startScan, setStartScan] = useState(false)
@@ -33,6 +33,17 @@ export const CheckinQR = ({
   const startScanning = async () => {
     const { status } = await BarCodeScanner.requestPermissionsAsync()
     setHasPermission(status == 'granted')
+    const needCheck = await SecureStore.getItemAsync('dateCheckedin')
+    const dateNow = new Date().getDate()
+    if (needCheck == null || needCheck != (dateNow + 1).toString()) {
+      await SecureStore.setItemAsync('dateCheckedin', dateNow.toString())
+    } else {
+      alert('Only checkin one time one device each day')
+      navigate.navigate('BottomTabs', {
+        screen: 'CheckinBottom',
+        params: { isChecking: false },
+      })
+    }
     setStartScan(true)
   }
   useEffect(() => {
@@ -47,19 +58,51 @@ export const CheckinQR = ({
 
   const navigationBack = useNavigation<StackNavigationProp<RootStackParamList>>()
   const { sendCheckin_inRequest } = useCheckin_inRequest()
-
+  console.log(new Date().getDate() + 1)
   const handleBarCodeScanned = ({ type, data }: BarCodeEvent) => {
     setScanned(true)
     // Linking.openURL(data).catch((err) => console.error('An error occured', err))
     // console.log(response)
+    const date = new Date()
+    const code =
+      'NBNHR' +
+      ' ' +
+      date.getDate().toString() +
+      ' ' +
+      date.getMonth().toString() +
+      ' ' +
+      date.getFullYear().toString() +
+      ' ' +
+      currentUser?.eid
     fetchData(data)
-    if (data == 'NBNHR-03/12') {
-      alert('You successfully checked in')
-      sendCheckin_inRequest(check_inInput)
-      navigationBack.navigate('BottomTabs', {
-        screen: 'CheckinBottom',
-        params: { isChecking: true },
-      })
+    console.log(code)
+    console.log(md5(code))
+    if (data == md5(code)) {
+      if (checkedin?.timeIn == null) {
+        alert('You successfully checked in')
+        sendCheckin_inRequest({
+          userId: currentUser?.id as number,
+          deviceId: Device.deviceName as string,
+          date: new Date().toISOString(),
+          timeIn: new Date().toISOString(),
+        })
+        navigationBack.navigate('BottomTabs', {
+          screen: 'CheckinBottom',
+          params: { isChecking: true },
+        })
+      } else {
+        alert('You successfully checked out')
+        sendCheckin_outRequest({
+          userId: currentUser?.id as number,
+          deviceId: Device.deviceName as string,
+          date: new Date().toISOString(),
+          timeOut: new Date().toISOString(),
+        })
+        navigationBack.navigate('BottomTabs', {
+          screen: 'CheckinBottom',
+          params: { isChecking: false },
+        })
+      }
     } else alert("Please scan company's QR")
     setStartScan(false)
   }

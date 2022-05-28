@@ -1,12 +1,16 @@
+import type { JwtPayload } from 'jwt-decode'
+
 import * as SecureStore from 'expo-secure-store'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useQueryClient, useQuery } from 'react-query'
+import jwt_decode from 'jwt-decode'
 
 import { authRequestInterceptor, axios } from '@/lib/axios'
 
 import { Auth, fetchUser } from '../state/auth-api'
 
 import { AUTH, CURRENT_USER } from './query-keys'
+
 export const useCurrentUser = () => {
   const { auth } = useAuth()
 
@@ -27,18 +31,18 @@ export const useCurrentUser = () => {
 export const useAuth = () => {
   const queryClient = useQueryClient()
   const auth = queryClient.getQueryData<Auth>(AUTH)
-  let token = ''
+  const [token, setToken] = useState<string | null>(null)
+  const [id, setId] = useState<number | null>(null)
+  SecureStore.getItemAsync('token').then((data) => setToken(data))
+  SecureStore.getItemAsync('id').then((data) => setId(Number(data)))
+
   if (!auth) {
-    const getToken = async () => {
-      token = (await SecureStore.getItemAsync('token')) as string
-    }
-    getToken()
-    const isTokenExpired = (token: string) =>
-      Date.now() >= JSON.parse(atob(token.split('.')[1])).exp * 1000
-    if (token && !isTokenExpired(token))
+    const exp = token ? jwt_decode<JwtPayload>(token).exp : undefined
+    const isTokenExpired = exp && new Date().getTime() >= exp * 1000
+    if (token && !isTokenExpired)
       queryClient.setQueryData<Auth>([AUTH], {
         token: token,
-        id: parseInt(localStorage.getItem('id') as string),
+        id: Number(id),
       })
   }
 

@@ -11,31 +11,30 @@ import * as Location from 'expo-location'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import IconFoundation from 'react-native-vector-icons/Foundation'
 import { useNavigation } from '@react-navigation/native'
+import * as SecureStore from 'expo-secure-store'
+
 // import DeviceInfo from 'react-native-device-info'
 
 import { useQueryClient } from 'react-query'
 
 import { tw } from '@/lib/tailwind'
 import CompanyIcon from '@/assets/images/company_pin.png'
-import { useCheckin_inRequest } from '@/state/checkin-mutation'
+import { useCheckin_inRequest, useCheckin_outRequest } from '@/state/checkin-mutation'
 import { useCurrentUser } from '@/state/auth-queries'
 import { useCoordinate } from '@/state/coordinate-queries'
 import { LOCATIONS } from '@/state/query-keys'
+import { useHaveCheckedin } from '@/state/checkin-queries'
 
 export const CheckinGPS = () => {
   // const geolocation = new Geolocation()
   const queryClient = useQueryClient()
   const { currentUser } = useCurrentUser()
   const { coordinates } = useCoordinate()
-  console.log(coordinates)
-  const check_inInput = {
-    userId: currentUser?.id as number,
-    deviceId: Device.deviceName as string,
-    date: new Date().toISOString(),
-    timeIn: new Date().toISOString(),
-  }
+  const { checkedin } = useHaveCheckedin(currentUser?.id as number)
+  const { sendCheckin_outRequest } = useCheckin_outRequest()
+
   const [refresh, setRefresh] = useState(false)
-  const onPress = () => setRefresh(!refresh)
+  const onPress = () => queryClient.refetchQueries([LOCATIONS]).then(() => setRefresh(!refresh))
   const company_latitude = coordinates?.latitude as number
   const company_longtitude = coordinates?.longitude as number
   // console.log("longitude: "+company_longtitude)
@@ -89,22 +88,46 @@ export const CheckinGPS = () => {
   }
   const [distance, setDistance] = useState(0)
   useEffect(() => {
-    getLocationAsync()
-  }, [])
-  useEffect(() => {
-    queryClient.refetchQueries([LOCATIONS])
-    getLocationAsync()
-  }, [refresh])
+    if (coordinates) getLocationAsync()
+  }, [refresh, coordinates])
   // getDistance(
   //   { latitude: 20.0504188, longitude: 64.4139099 },
   //   { latitude: 51.528308, longitude: -0.3817765 }
   // )
   const { sendCheckin_inRequest } = useCheckin_inRequest()
-  const handleOnConfirm = () => {
-    sendCheckin_inRequest(check_inInput)
+  const handleOnConfirm = async () => {
+    const needCheck = await SecureStore.getItemAsync('dateCheckedin')
+    const dateNow = new Date().getDate()
+    if (needCheck == null || needCheck != (dateNow + 1).toString()) {
+      sendCheckin_inRequest({
+        userId: currentUser?.id as number,
+        deviceId: Device.deviceName as string,
+        date: new Date().toISOString(),
+        timeIn: new Date().toISOString(),
+      })
+      await SecureStore.setItemAsync('dateCheckedin', dateNow.toString())
+      navigation.navigate('BottomTabs', {
+        screen: 'CheckinBottom',
+        params: { isChecking: true },
+      })
+    } else {
+      alert('Only checkin one time one device each day')
+      navigation.navigate('BottomTabs', {
+        screen: 'CheckinBottom',
+        params: { isChecking: false },
+      })
+    }
+  }
+  const handleOnConfirmOut = async () => {
+    sendCheckin_outRequest({
+      userId: currentUser?.id as number,
+      deviceId: Device.deviceName as string,
+      date: new Date().toISOString(),
+      timeOut: new Date().toISOString(),
+    })
     navigation.navigate('BottomTabs', {
       screen: 'CheckinBottom',
-      params: { isChecking: true },
+      params: { isChecking: false },
     })
   }
   // getGeocodeAsync = async (location) => {
@@ -178,14 +201,25 @@ export const CheckinGPS = () => {
         <Text style={tw('font-nunito')}>Refresh Your Location</Text>
       </TouchableOpacity>
       {distance < 200 ? (
-        <TouchableOpacity
-          style={tw(
-            'h-10 w-30 ml-37 mt-5 bg-blue-700 flex-row items-center justify-center rounded-lg'
-          )}
-          onPress={handleOnConfirm}
-        >
-          <Text style={tw('text-white text-lg font-nunito-bold')}>CONFIRM</Text>
-        </TouchableOpacity>
+        checkedin?.timeIn == null ? (
+          <TouchableOpacity
+            style={tw(
+              'h-10 w-40 ml-33 mt-5 bg-blue-700 flex-row items-center justify-center rounded-lg'
+            )}
+            onPress={handleOnConfirm}
+          >
+            <Text style={tw('text-white text-lg font-nunito-bold')}>CONFIRM CHECKIN</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={tw(
+              'h-10 w-43 ml-30 mt-5 bg-red-500 flex-row items-center justify-center rounded-lg'
+            )}
+            onPress={handleOnConfirmOut}
+          >
+            <Text style={tw('text-white text-lg font-nunito-bold')}>CONFIRM CHECKOUT</Text>
+          </TouchableOpacity>
+        )
       ) : (
         <>
           <View

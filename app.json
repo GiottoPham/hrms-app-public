@@ -3,6 +3,7 @@
     "name": "hrms-mobile-app",
     "slug": "hrms-mobile-app",
     "version": "1.0.0",
+    "privacy":"public",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -38,7 +39,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "",
+    "description":"An HRMS application",
     "notification": {
       "icon": "./assets/fff.png"
     }

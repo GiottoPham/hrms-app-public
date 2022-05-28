@@ -10,14 +10,14 @@ import { format } from 'date-fns'
 
 import { tw } from '@/lib/tailwind'
 import { useJobs } from '@/state/job-queries'
+import { useUnits } from '@/state/unit-queries'
 export const JobSalary = ({ info }: { info: JobDetailInputParams }) => {
   // let realSalary = info.salary
   // if (info.salaryGroup == 1) realSalary = realSalary * 1.1
   const [visible, setVisible] = useState(false)
   const { jobDetail } = useJobs(info.jobId as number)
-
-  if (!info || !jobDetail) return <ActivityIndicator size="small" color="#0000ff" />
-
+  const { units } = useUnits(false)
+  if (!info || !jobDetail || !units) return <ActivityIndicator size="small" color="#0000ff" />
   return (
     <View style={tw('px-5')}>
       <View style={tw('flex flex-row ')}>
@@ -73,7 +73,7 @@ export const JobSalary = ({ info }: { info: JobDetailInputParams }) => {
                 <IconMate name="network" size={20} color="#ffbe55" style={tw('-mr-5')} />
                 <TextInput
                   style={tw('h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10')}
-                  value="CEO"
+                  value={units.find((unit) => unit.id === info.departmentId)?.name}
                   underlineColorAndroid="transparent"
                   editable={false}
                   selectTextOnFocus={false}
@@ -86,7 +86,7 @@ export const JobSalary = ({ info }: { info: JobDetailInputParams }) => {
                 <IconAw name="calendar-alt" size={20} color="#ffbe55" style={tw('-mr-5')} />
                 <TextInput
                   style={tw('h-10 w-45 bg-transparent border-b border-yellow-600 text-white px-10')}
-                  value="129379493"
+                  value={info.pit}
                   underlineColorAndroid="transparent"
                   editable={false}
                   selectTextOnFocus={false}
@@ -108,7 +108,10 @@ export const JobSalary = ({ info }: { info: JobDetailInputParams }) => {
                 <IconAw name="money-check-alt" size={20} color="#ffbe55" style={tw('-mr-5')} />
                 <TextInput
                   style={tw('h-10 w-95 bg-transparent border-b border-yellow-600 text-white px-10')}
-                  value={info.salary.toString()}
+                  value={Number(info.salary).toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
                   underlineColorAndroid="transparent"
                   editable={false}
                   selectTextOnFocus={false}
