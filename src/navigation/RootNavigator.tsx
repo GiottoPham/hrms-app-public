@@ -8,9 +8,11 @@ import { LeaveScreen } from '@/screens/LeaveScreen'
 import { InformationScreen } from '@/screens/InformationScreen'
 import { NotiScreen } from '@/screens/NotiScreen'
 import { CreateFormLeave } from '@/screens/CreateFormLeave'
+import { CheckinMethod } from '@/components/CheckinScreen/CheckinMethod'
+import { CreateTask } from '@/screens/CreateTask'
 
 import { BottomTabNavigator } from './BottomTabNavigation'
-import { CheckinMethod } from '@/components/CheckinScreen/CheckinMethod'
+
 const Stack = createStackNavigator<RootStackParamList>()
 
 export const RootNavigator = () => {
@@ -82,6 +84,14 @@ export const RootNavigator = () => {
       <Stack.Screen
         name="CheckinMethod"
         component={CheckinMethod}
+        options={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        }}
+      />
+      <Stack.Screen
+        name="CreateTask"
+        component={CreateTask}
         options={{
           headerShown: false,
           cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,

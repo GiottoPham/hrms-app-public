@@ -3,11 +3,12 @@
     "name": "hrms-mobile-app",
     "slug": "hrms-mobile-app",
     "version": "1.0.0",
+    "privacy":"public",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/Picture2.png",
-      "resizeMode":"cover"
+      "resizeMode": "cover"
     },
     "userInterfaceStyle": "automatic",
     "updates": {
@@ -18,14 +19,16 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "infoPlist":{
-        "NSCameraUsageDescription":"This app needs camera to scan QR Code surving checkin purpose!",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs camera to scan QR Code surving checkin purpose!",
+        "NSPhotoLibraryAddUsageDescription": "Your message to user when the photo l",
         "NSPhotoLibraryUsageDescription": "Your message to user when the photo library is accessed for the first time",
         "NSMicrophoneUsageDescription": "Your message to user when the microsphone is accessed for the first time",
-        "NSLocationWhenInUseUsageDescription":  "This app needs your location surving checkin purpose!",
-        "NSLocationAlwaysUsageDescription":  "This app needs your location surving checkin purpose!"
-
-      }
+        "NSLocationWhenInUseUsageDescription": "This app needs your location surving checkin purpose!",
+        "NSLocationAlwaysUsageDescription": "This app needs your location surving checkin purpose!",
+        "NSCalendarsUsageDescription": "This app required to access calendar"
+      },
+      "bundleIdentifier": "1"
     },
     "android": {
       "adaptiveIcon": {
@@ -36,6 +39,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": ""
+    "description":"An HRMS application",
+    "notification": {
+      "icon": "./assets/fff.png"
+    }
   }
 }

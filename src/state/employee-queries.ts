@@ -3,8 +3,8 @@ import type { AxiosError } from 'axios'
 
 import { useQuery } from 'react-query'
 
-import { fetchEmployee } from './employee-api'
-import { EMPLOYEE } from './query-keys'
+import { fetchEmployee, fetchEmployees } from './employee-api'
+import { EMPLOYEE, EMPLOYEES } from './query-keys'
 
 export const useEmployee = (id: number) => {
   const { data: employee, ...rest } = useQuery<Employee, AxiosError>({
@@ -14,4 +14,14 @@ export const useEmployee = (id: number) => {
   })
 
   return { employee, ...rest }
+}
+
+export const useEmployees = () => {
+  const { data: employees, ...rest } = useQuery<Employee[], AxiosError>({
+    queryKey: [EMPLOYEES],
+    queryFn: () => fetchEmployees(),
+    retry: false,
+  })
+
+  return { employees, ...rest }
 }

@@ -2,11 +2,14 @@ import { TextInput, View, Text, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { format } from 'date-fns'
-import DateTimePickerModal from 'react-native-modal-datetime-picker'
+import { differenceInDays, format } from 'date-fns'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import DateTimePickerModal from 'react-native-modal-datetime-picker'
 
 import { tw } from '@/lib/tailwind'
+import { useCurrentUser } from '@/state/auth-queries'
+import { useSendLeaveRequest } from '@/state/leave-mutation'
+import { LeaveInputParams, LeaveTypeNum } from '@/types/leave'
 export const CreateFormLeave = () => {
   //   const styles = StyleSheet.create({
   //     input: {
@@ -18,7 +21,7 @@ export const CreateFormLeave = () => {
   //   })
   const [text, setText] = useState('')
   const reasons = ['Annual Leave', 'Unpaid Leave']
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState(-1)
   const [leaveType, setLeaveType] = useState(-1)
 
   const amountDays = ['1/2 day', '1 day', 'Many days']
@@ -27,6 +30,7 @@ export const CreateFormLeave = () => {
 
   const [dateAvailable, setDateAvailable] = useState(new Date())
   const [dateAvailable2, setDateAvailable2] = useState(new Date())
+  const { currentUser } = useCurrentUser()
 
   const showDatePicker = () => {
     setDatePickerVisibility(true)
@@ -43,24 +47,39 @@ export const CreateFormLeave = () => {
   const handleConfirm = (date: Date) => {
     hideDatePicker()
     setDateAvailable(date)
+    setLeaveReq({ ...leaveReq, fromDate: date.toISOString() })
   }
   const handleConfirm2 = (date: Date) => {
     hideDatePicker2()
     setDateAvailable2(date)
+    setLeaveReq({ ...leaveReq, toDate: date.toISOString() })
   }
-  // const [keyboardHeight, setKeyboardHeight] = useState(0)
-  // function onKeyboardDidShow(e: KeyboardEvent) {
-  //   // Remove type here if not using TypeScript
-  //   setKeyboardHeight(e.endCoordinates.height)
-  // }
+  const [leaveReq, setLeaveReq] = useState<LeaveInputParams>({
+    amount: -1,
+    fromDate: new Date().toISOString(),
+    toDate: '',
+    leaveType: undefined,
+    reason: '',
+    userId: currentUser?.id as number,
+  })
+  const { sendLeaveRequest } = useSendLeaveRequest()
+  const handleSubmit = () => {
+    let newAmount = 0
+    if (amount == 0) newAmount = Number(1 / 2)
+    else if (amount == 1) newAmount = 1
+    else newAmount = differenceInDays(dateAvailable2, dateAvailable)
+    console.log({ ...leaveReq, amount: newAmount, toDate: leaveReq.fromDate })
+    if (leaveReq.toDate == '') {
+      console.log({ ...leaveReq, amount: newAmount, toDate: leaveReq.fromDate })
+      sendLeaveRequest({ ...leaveReq, amount: newAmount, toDate: leaveReq.fromDate })
+        .then(() => alert('Your request has been sent!'))
+        .catch(() => alert('Failed!'))
+    } else
+      sendLeaveRequest({ ...leaveReq, amount: newAmount })
+        .then(() => alert('Your request has been sent!'))
+        .catch(() => alert('Failed!'))
+  }
 
-  // function onKeyboardDidHide() {
-  //   setKeyboardHeight(0)
-  // }
-
-  // useEffect(() => {
-
-  // }, [])
   return (
     <KeyboardAwareScrollView style={tw('bg-gray-200')}>
       <View style={tw('flex relative flex-1 bg-gray-200 px-6 py-5')}>
@@ -71,9 +90,8 @@ export const CreateFormLeave = () => {
             data={reasons}
             // defaultValueByIndex={1}
             onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index)
               setLeaveType(index)
-              console.log(index == 0)
+              setLeaveReq({ ...leaveReq, leaveType: index as LeaveTypeNum })
               // setAmount(index)
             }}
             defaultButtonText={'Select leave type'}
@@ -104,7 +122,7 @@ export const CreateFormLeave = () => {
                 data={amountDays}
                 // defaultValueByIndex={1}
                 onSelect={(selectedItem, index) => {
-                  console.log(selectedItem, index)
+                  setLeaveReq({ ...leaveReq, amount: index })
                   setAmount(index)
                 }}
                 defaultButtonText={'Select amount'}
@@ -150,6 +168,7 @@ export const CreateFormLeave = () => {
             </View>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
+              textColor="#FFBE55"
               date={dateAvailable}
               mode="date"
               onConfirm={handleConfirm}
@@ -157,7 +176,7 @@ export const CreateFormLeave = () => {
             />
           </View>
         )}
-        {amount == 2 && (
+        {amount === 2 && (
           <View>
             <Text style={tw('font-nunito mb-2 mt-2')}> To Date * </Text>
             <View>
@@ -178,6 +197,7 @@ export const CreateFormLeave = () => {
             </View>
             <DateTimePickerModal
               isVisible={isDatePickerVisible2}
+              textColor="#FFBE55"
               date={dateAvailable2}
               mode="date"
               onConfirm={handleConfirm2}
@@ -187,13 +207,14 @@ export const CreateFormLeave = () => {
         )}
         <Text style={tw('font-nunito mb-2 mt-2')}> Reason * </Text>
         <TextInput
-          style={tw('px-2 text-lg h-30 w-90 bg-white rounded-lg text-black-300 items-start')}
-          onChangeText={(newText) => setText(newText)}
+          style={tw('px-2 text-lg h-30 w-90 bg-white rounded-lg text-black items-start')}
+          onChangeText={(newText) => setLeaveReq({ ...leaveReq, reason: newText })}
           defaultValue={text}
           multiline={true}
           // numberOfLines={1}
         />
         <TouchableOpacity
+          onPress={handleSubmit}
           style={tw('items-center justify-center rounded-lg h-13 w-30 bg-yellow-400 mt-2 ml-60')}
         >
           <Text style={tw('text-lg font-nunito-bold text-white')}> Submit</Text>

@@ -27,10 +27,13 @@ import { SalaryIcon } from '@/assets/icons/SalaryIcon'
 import { CreateFormLeave } from '@/screens/CreateFormLeave'
 import { CheckinMethod } from '@/components/CheckinScreen/CheckinMethod'
 import { useCurrentUser } from '@/state/auth-queries'
+import { CreateTask } from '@/screens/CreateTask'
+import { useEmployee } from '@/state/employee-queries'
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 export const BottomTabNavigator = () => {
   const { currentUser } = useCurrentUser()
+  const { employee } = useEmployee(currentUser?.eid as number)
   return (
     <BottomTab.Navigator
       initialRouteName="CheckinBottom"
@@ -78,6 +81,12 @@ export const BottomTabNavigator = () => {
           Icon: InformationIcon,
         },
         {
+          name: 'CreateTask' as const,
+          label: 'Create Event',
+          Component: CreateTask,
+          Icon: CalendarIcon,
+        },
+        {
           name: 'CheckinMethod' as const,
           label: 'Select Checkin Method',
           Component: CheckinMethod,
@@ -118,7 +127,9 @@ export const BottomTabNavigator = () => {
                           size={32}
                           rounded
                           source={{
-                            uri: 'https://cdn.pixabay.com/photo/2020/09/18/05/58/lights-5580916__340.jpg',
+                            uri: !employee
+                              ? 'https://png2.cleanpng.com/sh/c19eebe8d9f5306b216767f15eff595b/L0KzQYm3VsI0N6t1hJH0aYP2gLBuTfNwdaF6jNd7LXnmf7B6TfF3aaVmip98b3Pscb20jfVlcZIyet54Zz3pf7B7TfF4baR0RdNBYYTkgn7wgB9vNWZnStcEOXO3RIGCVsI0NmU7TKUEMUi0QYa5Wcc5OGc8TqQBNEaxgLBu/kisspng-computer-icons-avatar-social-media-blog-font-aweso-avatar-icon-5b2e99c4409623.4643918115297806762646.png'
+                              : employee.personalDetail.avatar,
                           }}
                           title={'N'}
                         />

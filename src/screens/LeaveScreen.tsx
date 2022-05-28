@@ -1,5 +1,5 @@
-import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, RefreshControl, ScrollView } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { format } from 'date-fns'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -7,15 +7,34 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 
 import { tw } from '@/lib/tailwind'
+import { useLeaves } from '@/state/leave-queries'
+import { useCurrentUser } from '@/state/auth-queries'
+import { LeaveParse, LeaveType, LeaveTypeNum } from '@/types/leave'
 
 import { LeaveAccept } from '../components/LeaveScreen/LeaveAgree'
 import { LeaveIgnore } from '../components/LeaveScreen/LeaveIgnore'
 import { LeavePending } from '../components/LeaveScreen/LeavePending'
 import { AddButton } from '../components/LeaveScreen/AddButton'
+import { useQueryClient } from 'react-query'
+import { LEAVE } from '@/state/query-keys'
 // import Icon from 'react-native-vector-icons/FontAwesome5'
 
 const Tab = createMaterialTopTabNavigator()
 export const LeaveScreen = () => {
+  const wait = (timeout: number) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout))
+  }
+
+  const leaveTypeList: Record<LeaveTypeNum, LeaveType> = {
+    0: LeaveType.Unpaid,
+    1: LeaveType.Paid,
+  }
+  const { currentUser } = useCurrentUser()
+  const { leaves } = useLeaves(currentUser?.id as number)
+  const [listPending, setListPending] = useState<LeaveParse[]>([])
+  const [listAgree, setListAgree] = useState<LeaveParse[]>([])
+  const [listIgnore, setListIgnore] = useState<LeaveParse[]>([])
+
   const [add, setAdd] = useState(false)
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false)
   const [dateAvailable, setDateAvailable] = useState(new Date())
@@ -31,7 +50,37 @@ export const LeaveScreen = () => {
     hideDatePicker()
     setDateAvailable(date)
   }
+
+  useEffect(() => {
+    console.log(currentUser)
+    console.log(leaves)
+    useCallback
+    const listPendingEffect: LeaveParse[] = []
+    const listAgreeEffect: LeaveParse[] = []
+    const listIgnoreEffect: LeaveParse[] = []
+    leaves?.forEach((item) => {
+      const obj = {
+        amount: item.amount,
+        fromDate: format(new Date(item.fromDate), 'dd/MM/yyyy'),
+        toDate: format(new Date(item.toDate), 'dd/MM/yyyy'),
+        leaveType: leaveTypeList[0],
+        reason: item.reason,
+        applicationDate: item.applicationDate,
+      }
+      const applicationDate = new Date(obj.applicationDate)
+      if (format(applicationDate, 'dd-MM-yyyy') === format(dateAvailable, 'dd-MM-yyyy')) {
+        if (item.status == 0) listAgreeEffect.push(obj)
+        else if (item.status == 1) listIgnoreEffect.push(obj)
+        else listPendingEffect.push(obj)
+      }
+    })
+    setListPending(listPendingEffect)
+    setListIgnore(listIgnoreEffect)
+    setListAgree(listAgreeEffect)
+  }, [leaves, dateAvailable])
   return (
+    // <ScrollView
+    //     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
     <View style={tw('flex flex-1 bg-gray-200')}>
       {!add && (
         <View style={tw('flex flex-1 bg-gray-200')}>
@@ -53,6 +102,7 @@ export const LeaveScreen = () => {
 
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
+            textColor="#FFBE55"
             date={dateAvailable}
             mode="date"
             onConfirm={handleConfirm}
@@ -73,17 +123,17 @@ export const LeaveScreen = () => {
           >
             <Tab.Screen
               name="Pending"
-              component={LeavePending}
+              children={() => <LeavePending leaveList={listPending} />}
               options={{ tabBarLabel: 'Pending' }}
             />
             <Tab.Screen
               name="Accept"
-              component={LeaveAccept}
+              children={() => <LeaveAccept leaveList={listAgree} />}
               options={{ tabBarLabel: 'Accepted' }}
             />
             <Tab.Screen
               name="Ignore"
-              component={LeaveIgnore}
+              children={() => <LeaveIgnore leaveList={listIgnore} />}
               options={{ tabBarLabel: 'Ignored' }}
             />
           </Tab.Navigator>
@@ -95,6 +145,7 @@ export const LeaveScreen = () => {
         </View>
       )}
     </View>
+    // </ScrollView>
   )
 }
 // const styles = StyleSheet.create({

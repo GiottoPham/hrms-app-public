@@ -13,7 +13,7 @@ export const login = ({ username, password }: { username: string; password: stri
   return axios
     .request<Auth>({
       method: 'POST',
-      url: '/api/v1/auth/login',
+      url: '/api/v1/auth/mobile/login',
       data: {
         username,
         password,
