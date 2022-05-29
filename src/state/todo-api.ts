@@ -1,14 +1,17 @@
-import type { Todo, TodoParams, TodoPostInputParams, TodoUpdateInputParams } from '@/types/todo'
+import type { TodoGet, TodoParams, TodoPostInputParams, TodoUpdateInputParams } from '@/types/todo'
 
 import { axios } from '@/lib/axios'
-export const fetchTodos = (todoParams: TodoParams): Promise<Todo[]> => {
+export const fetchTodos = (todoParams: TodoParams): Promise<TodoGet[]> => {
   return axios
     .request({
       method: 'GET',
       url: '/api/v1/getEvents',
       params: todoParams,
     })
-    .then((res) => res.data)
+    .then((res) => {
+      console.log('hello',res.data)
+      return res.data
+    })
 }
 
 export const sendTodo = (todoPost: TodoPostInputParams) => {

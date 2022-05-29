@@ -11,13 +11,14 @@ import { Chip } from 'react-native-paper'
 import { isAfter } from 'date-fns'
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button'
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown'
+import { check } from 'prettier'
 
 import { tw } from '@/lib/tailwind'
 import { useNotiToken } from '@/state/noti-queries'
 import { useSendTodo } from '@/state/todo-mutation'
 import { useCurrentUser } from '@/state/auth-queries'
 import { useEmployees } from '@/state/employee-queries'
-import { check } from 'prettier'
+import { sendNoti } from '@/state/noti-api'
 
 // const { width: vw } = Dimensions.get('window')
 // moment().format('YYYY/MM/DD')
@@ -140,14 +141,14 @@ export const CreateTask = ({
     },
   })
   const [currentDay, setCurrentDay] = useState(moment().format())
-  const [checked, setChecked] = useState(1)
+  const [checked, setChecked] = useState(0)
   const [taskText, setTaskText] = useState('')
   const [notesText, setNotesText] = useState('')
   const [isAlarmSet, setAlarmSet] = useState(false)
   const [alarmTime, setAlarmTime] = useState(moment().format())
   const [alarmTime2, setAlarmTime2] = useState(moment().format())
 
-  const [label, setLabel] = useState('task')
+  const [label, setLabel] = useState('Task')
   const [location, setLocation] = useState('')
   const [selectedChip, setSelectedChip] = useState(1)
   const [selectedColor, setSeclectedColor] = useState('')
@@ -340,6 +341,8 @@ export const CreateTask = ({
                   selected={selectedChip === 1}
                   onPress={() => {
                     setSelectedChip(1)
+                    setLabel('Task')
+                    setLocation('')
                     // if(selectedChip===1) setSeclectedColor('bg-yellow-500')
                     // else setSeclectedColor('')
                   }}
@@ -352,6 +355,8 @@ export const CreateTask = ({
                   selected={selectedChip === 2}
                   onPress={() => {
                     setSelectedChip(2)
+                    setLabel('Meeting')
+
                     // if (selectedChip === 2) setSeclectedColor('bg-yellow-500')
                     // else setSeclectedColor('')
                   }}
@@ -364,6 +369,7 @@ export const CreateTask = ({
                   selected={selectedChip === 3}
                   onPress={() => {
                     setSelectedChip(3)
+                    setLabel('Event')
                     // if (selectedChip === 2) setSeclectedColor('bg-yellow-500')
                     // else setSeclectedColor('')
                   }}
@@ -467,17 +473,18 @@ export const CreateTask = ({
               <View style={tw('mt-2')}>
                 <RadioGroup
                   color="#ffac2f"
+                  selectedIndex={0}
                   style={tw('flex flex-row ml--2 mb-1')}
                   onSelect={(value: number) => {
                     setChecked(value)
                     if(value==0) setEmpsSelect([])
                   }}
                 >
-                  <RadioButton value={1}>
+                  <RadioButton value={0}>
                     <Text style={tw('text-lg')}>All </Text>
                   </RadioButton>
 
-                  <RadioButton style={tw('ml-5')} value={2}>
+                  <RadioButton style={tw('ml-5')} value={1}>
                     <Text style={tw('text-lg')}>Specific Employees</Text>
                   </RadioButton>
                 </RadioGroup>
@@ -485,6 +492,9 @@ export const CreateTask = ({
 
                 {checked == 1 && <View style={tw('mb-5')}>
                   <AutocompleteDropdown
+                  textInputProps={{
+                    placeholder: 'Select Employees to send',
+                    placeholderTextColor: '#ffffff'}}
                     clearOnFocus={false}
                     closeOnBlur={true}
                     closeOnSubmit={false}
@@ -498,7 +508,7 @@ export const CreateTask = ({
                       // empsChips.push(<Chip></Chip>)
 
                       if (item && !empsSelect.find((value) => value.id == item.id)) {
-                        setEmpsSelect([...empsSelect, { id: item.id, title: item.title as string, node: <Chip
+                        setEmpsSelect([...empsSelect, { id: item.id, title: item.title as string, node: <Chip style={tw('mr-1 mb-2')}
                           onClose={() =>
                             setEmpsSelect(empsSelect.filter((value) => value.id != item.id))
                           }
@@ -523,12 +533,12 @@ export const CreateTask = ({
           </View>
 
           <TouchableOpacity
-            disabled={taskText === '' || isAfter(new Date(alarmTime), new Date(alarmTime2))}
+            disabled={taskText === '' || isAfter(new Date(alarmTime), new Date(alarmTime2)) || (checked==1 && empsSelect.length==0)}
             style={[
               styles.createTaskButton,
               {
                 backgroundColor:
-                  taskText === '' || isAfter(new Date(alarmTime), new Date(alarmTime2))
+                  taskText === '' || isAfter(new Date(alarmTime), new Date(alarmTime2)) || (checked==1 && empsSelect.length==0)
                     ? '#ffe6c0'
                     : '#ffac2f',
               },
@@ -537,24 +547,38 @@ export const CreateTask = ({
               console.log(checked)
               console.log(empsSelect)
               // setEmpsSelect(empsSelect.splice(0,empsSelect.length))
-              console.log(empsSelect.map(item=>Number(item.id)))
-              // sendNoti({
-              //   to:
-              //     tokenList == undefined || tokenList == []
-              //       ? [
-              //           'ExponentPushToken[nywcawIdX9ivla1Drzr2y3]',
-              //           'ExponentPushToken[HBEcdaIu5Kk4PL1LYdpXop]',
-              //         ]
-              //       : tokenList,
-              //   title: `You have a new event/task: ${taskText}`,
-              //   body: `Took place at ${moment(alarmTime).format('DD/MM HH:mm')}`,
-              // })
-              // sendTodo({
-              //   title: taskText,
-              //   notes: notesText,
-              //   time: new Date(alarmTime).toISOString(),
-              //   userId: currentUser?.id as number,
-              // }).then(alert('Your event has been scheduled!'))
+              console.log(checked==1 && empsSelect.length==0)
+              console.log({ 
+                title: taskText,
+                notes: notesText,
+                time: new Date(alarmTime).toISOString(),
+                userId: currentUser?.id as number,
+                timeEnd: new Date(alarmTime2).toISOString(),
+                location: location,
+                type: label,
+                eid: checked==0?null:empsSelect.map(item=>Number(item.id))
+              })
+              sendNoti({
+                to:
+                  tokenList == undefined || tokenList == []
+                    ? [
+                        'ExponentPushToken[nywcawIdX9ivla1Drzr2y3]',
+                        'ExponentPushToken[HBEcdaIu5Kk4PL1LYdpXop]',
+                      ]
+                    : tokenList,
+                title: `You have a new event/task: ${taskText}`,
+                body: `Took place at ${moment(alarmTime).format('DD/MM HH:mm')}`,
+              })
+              sendTodo({ 
+                title: taskText,
+                notes: notesText,
+                time: new Date(alarmTime).toISOString(),
+                userId: currentUser?.id as number,
+                timeEnd: new Date(alarmTime2).toISOString(),
+                location: location,
+                type: label,
+                eid: checked==0 ? null:empsSelect.map(item=>Number(item.id))
+              }).then(()=>alert('Your event has been scheduled!')).catch(()=>alert('Send failed !'))
             }}
           >
             <Text
