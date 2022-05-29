@@ -5,18 +5,18 @@ import { format } from 'date-fns'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import { useQueryClient } from 'react-query'
 
 import { tw } from '@/lib/tailwind'
 import { useLeaves } from '@/state/leave-queries'
 import { useCurrentUser } from '@/state/auth-queries'
 import { LeaveParse, LeaveType, LeaveTypeNum } from '@/types/leave'
+import { LEAVE } from '@/state/query-keys'
 
 import { LeaveAccept } from '../components/LeaveScreen/LeaveAgree'
 import { LeaveIgnore } from '../components/LeaveScreen/LeaveIgnore'
 import { LeavePending } from '../components/LeaveScreen/LeavePending'
 import { AddButton } from '../components/LeaveScreen/AddButton'
-import { useQueryClient } from 'react-query'
-import { LEAVE } from '@/state/query-keys'
 // import Icon from 'react-native-vector-icons/FontAwesome5'
 
 const Tab = createMaterialTopTabNavigator()
@@ -63,7 +63,7 @@ export const LeaveScreen = () => {
         amount: item.amount,
         fromDate: format(new Date(item.fromDate), 'dd/MM/yyyy'),
         toDate: format(new Date(item.toDate), 'dd/MM/yyyy'),
-        leaveType: leaveTypeList[0],
+        leaveType: leaveTypeList[item.leaveType || 0],
         reason: item.reason,
         applicationDate: item.applicationDate,
       }

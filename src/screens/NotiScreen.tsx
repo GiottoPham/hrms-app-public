@@ -17,6 +17,7 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  ActivityIndicator,
 } from 'react-native'
 import moment from 'moment'
 import * as Calendar from 'expo-calendar'
@@ -138,7 +139,6 @@ const styles = StyleSheet.create({
     fontSize: 19,
   },
   taskContainer: {
-    height: 330,
     width: 327,
     borderRadius: 20,
     shadowColor: '#FFAC2F',
@@ -185,29 +185,43 @@ export const NotiScreen = ({
   }, [])
   //************* */
   const { todoParams, setTodoParams } = useTodoParams()
-  console.log(todoParams)
-  const { todos = [] } = useTodos(todoParams)
+  const { todos } = useTodos(todoParams)
+
   const [currentDate, setCurrentDate] = useState<moment.Moment>(moment(new Date()))
   const [isModalVisible, setModalVisible] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Todo>()
   const [isDateTimePickerVisible, setDateTimePickerVisible] = useState(false)
+  const [isDateTimePickerVisible2, setDateTimePickerVisible2] = useState(false)
+
   const handleModalVisible = () => {
     setModalVisible(!isModalVisible)
   }
 
   const showDateTimePicker = () => setDateTimePickerVisible(true)
+  const showDateTimePicker2 = () => setDateTimePickerVisible2(true)
 
   const hideDateTimePicker = () => setDateTimePickerVisible(false)
+  const hideDateTimePicker2 = () => setDateTimePickerVisible2(false)
 
   const handleDatePicked = (date: Date) => {
     const prevSelectedTask = JSON.parse(JSON.stringify(selectedTask))
-    const selectedDatePicked = prevSelectedTask.alarm.time
+    const selectedDatePicked = prevSelectedTask.time
     const hour = moment(date).hour()
     const minute = moment(date).minute()
     const newModifiedDay = moment(selectedDatePicked).hour(hour).minute(minute)
-    prevSelectedTask.alarm.time = newModifiedDay
+    prevSelectedTask.time = newModifiedDay
     setSelectedTask(prevSelectedTask)
     hideDateTimePicker()
+  }
+  const handleDatePicked2 = (date: Date) => {
+    const prevSelectedTask = JSON.parse(JSON.stringify(selectedTask))
+    const selectedDatePicked = prevSelectedTask.timeEnd
+    const hour = moment(date).hour()
+    const minute = moment(date).minute()
+    const newModifiedDay = moment(selectedDatePicked).hour(hour).minute(minute)
+    prevSelectedTask.timeEnd = newModifiedDay
+    setSelectedTask(prevSelectedTask)
+    hideDateTimePicker2()
   }
 
   const updateAlarm = async () => {
@@ -220,7 +234,7 @@ export const NotiScreen = ({
       timeZone: Localization.timezone,
       alarms: [
         {
-          relativeOffset: 3,
+          relativeOffset: -15,
         },
       ],
     }
@@ -254,6 +268,7 @@ export const NotiScreen = ({
   }
   const { updateTodo } = useUpdateTodo()
   console.log(todos)
+  if (!todos) return <ActivityIndicator size="small" color="#0000ff" />
   return (
     <Fragment>
       {selectedTask !== null && (
@@ -262,6 +277,14 @@ export const NotiScreen = ({
             isVisible={isDateTimePickerVisible}
             onConfirm={handleDatePicked}
             onCancel={hideDateTimePicker}
+            mode="time"
+            date={new Date()}
+            isDarkModeEnabled
+          />
+          <DateTimePicker
+            isVisible={isDateTimePickerVisible2}
+            onConfirm={handleDatePicked2}
+            onCancel={hideDateTimePicker2}
             mode="time"
             date={new Date()}
             isDarkModeEnabled
@@ -301,6 +324,32 @@ export const NotiScreen = ({
                 }}
                 value={selectedTask?.notes}
                 placeholder="Enter notes about the task."
+              />
+            </View>
+            <View style={styles.notesContent} />
+            <View>
+              <Text
+                style={{
+                  color: '#9CAAC4',
+                  fontSize: 16,
+                  fontWeight: '600',
+                }}
+              >
+                Location
+              </Text>
+              <TextInput
+                style={{
+                  height: 25,
+                  fontSize: 19,
+                  marginTop: 3,
+                }}
+                onChangeText={(text) => {
+                  const prevSelectedTask = JSON.parse(JSON.stringify(selectedTask))
+                  prevSelectedTask.location = text
+                  setSelectedTask(prevSelectedTask)
+                }}
+                value={selectedTask?.location}
+                placeholder="Enter location about the task."
               />
             </View>
             <View style={styles.separator} />
@@ -343,6 +392,46 @@ export const NotiScreen = ({
               </View>
             </View>
             <View style={styles.separator} />
+            <View>
+              <Text
+                style={{
+                  color: '#9CAAC4',
+                  fontSize: 16,
+                  fontWeight: '600',
+                }}
+              >
+                Times End
+              </Text>
+              <View style={tw('flex flex-row justify-between items-center')}>
+                <TouchableOpacity
+                  onPress={() => showDateTimePicker2()}
+                  style={{
+                    height: 25,
+                    marginTop: 3,
+                  }}
+                >
+                  <Text style={{ fontSize: 19 }}>
+                    {moment(selectedTask?.timeEnd || moment()).format('h:mm A')}
+                  </Text>
+                </TouchableOpacity>
+                {/* <View style={tw('flex flex-row')}>
+                  <Pressable
+                    style={tw(
+                      'bg-primary rounded-full w-10 h-10 flex items-center justify-center mr-2'
+                    )}
+                    onPress={async () => {
+                      await updateAlarm()
+                      Alert.alert('Successful create event')
+                      setModalVisible(false)
+                    }}
+                  >
+                    <Icon name={'notifications'} size={25} color="black" />
+                  </Pressable>
+                </View> */}
+              </View>
+            </View>
+            <View style={styles.separator} />
+
             <View
               style={{
                 flexDirection: 'row',
@@ -353,12 +442,12 @@ export const NotiScreen = ({
               <TouchableOpacity
                 onPress={async () => {
                   handleModalVisible()
-                  updateTodo({
-                    id: selectedTask?.id as number,
-                    title: selectedTask?.title || '',
-                    notes: selectedTask?.notes || '',
-                    time: new Date(selectedTask?.time as string).toISOString(),
-                  })
+                  // updateTodo({
+                  //   id: selectedTask?.id as number,
+                  //   title: selectedTask?.title || '',
+                  //   notes: selectedTask?.notes || '',
+                  //   time: new Date(selectedTask?.time as string).toISOString(),
+                  // })
                 }}
                 style={styles.updateButton}
               >
@@ -452,7 +541,7 @@ export const NotiScreen = ({
                   }}
                   key={index}
                   style={tw(
-                    'h-30 w-[327px] bg-white mt-5 rounded-lg px-5 py-5 self-center shadow-lg border-t-4',
+                    'h-40 w-[327px] bg-white mt-5 rounded-lg px-5 py-5 self-center shadow-lg border-t-4',
                     {
                       borderTopColor:
                         moment(new Date(item.time)).diff(moment().startOf('day'), 'days') === 0
@@ -479,9 +568,9 @@ export const NotiScreen = ({
                               : 'green',
                         })}
                       >
-                        <Text
-                          style={tw('font-nunito-semibold uppercase text-sm text-white')}
-                        >{`${moment(item.time).format('HH:MM')}`}</Text>
+                        <Text style={tw('font-nunito-semibold uppercase text-sm text-white')}>
+                          {item.type}
+                        </Text>
                       </View>
                     </View>
                     <View>
@@ -492,7 +581,37 @@ export const NotiScreen = ({
                             fontSize: 14,
                           }}
                         >
-                          {item.notes}
+                          Notes: {item.notes}
+                        </Text>
+                      </View>
+                      <View style={tw('mt-3')}>
+                        <Text
+                          style={{
+                            color: '#BBBBBB',
+                            fontSize: 14,
+                          }}
+                        >
+                          Locations: {item.location}
+                        </Text>
+                      </View>
+                      <View style={tw('mt-3 justify-end flex-row')}>
+                        <Text
+                          style={{
+                            color:
+                              moment(new Date(item.time)).diff(moment().startOf('day'), 'days') ===
+                              0
+                                ? 'red'
+                                : moment(new Date(item.time)).diff(
+                                    moment().startOf('day'),
+                                    'days'
+                                  ) === 1
+                                ? '#FFAC2F'
+                                : 'green',
+                            fontSize: 18,
+                          }}
+                        >
+                          {`${moment(item.time).format('h:mm A')}`} -{' '}
+                          {`${moment(item.timeEnd).format('h:mm A')}`}
                         </Text>
                       </View>
                     </View>

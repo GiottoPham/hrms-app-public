@@ -58,38 +58,40 @@ export const CheckinQR = ({
 
   const navigationBack = useNavigation<StackNavigationProp<RootStackParamList>>()
   const { sendCheckin_inRequest } = useCheckin_inRequest()
-  console.log(new Date().getDate() + 1)
   const handleBarCodeScanned = ({ type, data }: BarCodeEvent) => {
     setScanned(true)
     // Linking.openURL(data).catch((err) => console.error('An error occured', err))
     // console.log(response)
-    const date = new Date()
-    const code =
-      'NBNHR' +
-      ' ' +
-      date.getDate().toString() +
-      ' ' +
-      date.getMonth().toString() +
-      ' ' +
-      date.getFullYear().toString() +
-      ' ' +
-      currentUser?.eid
+    // const date = new Date()
+    // const code =
+    //   'NBNHR' +
+    //   ' ' +
+    //   date.getDate().toString() +
+    //   ' ' +
+    //   date.getMonth().toString() +
+    //   ' ' +
+    //   date.getFullYear().toString() +
+    //   ' ' +
+    //   currentUser?.eid
     fetchData(data)
-    console.log(code)
-    console.log(md5(code))
-    if (data == md5(code)) {
+    // const code = (new Date().getMilliseconds() - Number(data)) / 1000
+    // console.log(code)
+    // console.log(md5(code))
+    // console.log(new Date().getMilliseconds())
+    // console.log((new Date().getTime() - Number(data)) / 1000 )
+    if ((new Date().getTime() - Number(data)) / 1000 < 10) {
       if (checkedin?.timeIn == null) {
         alert('You successfully checked in')
-        sendCheckin_inRequest({
-          userId: currentUser?.id as number,
-          deviceId: Device.deviceName as string,
-          date: new Date().toISOString(),
-          timeIn: new Date().toISOString(),
-        })
-        navigationBack.navigate('BottomTabs', {
-          screen: 'CheckinBottom',
-          params: { isChecking: true },
-        })
+        // sendCheckin_inRequest({
+        //   userId: currentUser?.id as number,
+        //   deviceId: Device.deviceName as string,
+        //   date: new Date().toISOString(),
+        //   timeIn: new Date().toISOString(),
+        // })
+        // navigationBack.navigate('BottomTabs', {
+        //   screen: 'CheckinBottom',
+        //   params: { isChecking: true },
+        // })
       } else {
         alert('You successfully checked out')
         sendCheckin_outRequest({

@@ -7,7 +7,7 @@ import { tw } from '@/lib/tailwind'
 const styles = StyleSheet.create({
   cardMain: {
     position: 'relative',
-    top: 200,
+    top: 140,
     width: 327,
     alignSelf: 'center',
     zIndex: 1000,
